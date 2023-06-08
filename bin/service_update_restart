@@ -1,0 +1,118 @@
+#!/bin/sh
+
+# 重启 apiService-running
+apiService=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$apiService" ]; then
+  kill -9 "$apiService"
+  \cp -rf apiService apiService-running
+  nohup ./apiService-running >/dev/null 2>error/api.log &
+  echo $! >logs/apiService-running.pid
+else
+  \cp -rf apiService apiService-running
+  nohup ./apiService-running >/dev/null 2>error/api.log &
+  echo $! >logs/apiService-running.pid
+fi
+
+# 重启 huobiService-running
+huobiService=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$huobiService" ]; then
+  kill -9 "$huobiService"
+  \cp -rf huobiService huobiService-running
+  nohup ./huobiService-running >/dev/null 2>error/huobi.log &
+  echo $! >logs/huobiService-running.pid
+else
+  \cp -rf huobiService huobiService-running
+  nohup ./huobiService-running >/dev/null 2>error/huobi.log &
+  echo $! >logs/huobiService-running.pid
+fi
+
+## 重启 sinaService-running
+#sinaService=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $2}')
+#if [ "$sinaService" ]; then
+#  kill -9 "$sinaService"
+#  \cp -rf sinaService sinaService-running
+#  nohup ./sinaService-running >/dev/null 2>&1 &
+#  echo $! >logs/sinaService-running.pid
+#else
+#  \cp -rf sinaService sinaService-running
+#  nohup ./sinaService-running >/dev/null 2>&1 &
+#  echo $! >logs/sinaService-running.pid
+#fi
+
+# 重启 raceoptionService-running
+raceoptionService=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$raceoptionService" ]; then
+  kill -9 "$raceoptionService"
+  \cp -rf raceoptionService raceoptionService-running
+  nohup ./raceoptionService-running >/dev/null 2>error/raceoption.log &
+  echo $! >logs/raceoptionService-running.pid
+else
+  \cp -rf raceoptionService raceoptionService-running
+  nohup ./raceoptionService-running >/dev/null 2>error/raceoption.log &
+  echo $! >logs/raceoptionService-running.pid
+fi
+
+## 重启 liveoddsService-running
+#liveoddsService=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $2}')
+#if [ "$liveoddsService" ]; then
+#  kill -9 "$liveoddsService"
+#  \cp -rf liveoddsService liveoddsService-running
+#  nohup ./liveoddsService-running >/dev/null 2>error/liveodds.log &
+#  echo $! >logs/liveoddsService-running.pid
+#else
+#  \cp -rf liveoddsService liveoddsService-running
+#  nohup ./liveoddsService-running >/dev/null 2>error/liveodds.log &
+#  echo $! >logs/liveoddsService-running.pid
+#fi
+
+# 重启 olymptradeService-running
+olymptradeService=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$olymptradeService" ]; then
+  kill -9 "$olymptradeService"
+  \cp -rf olymptradeService olymptradeService-running
+  nohup ./olymptradeService-running >/dev/null 2>error/olymptrade.log &
+  echo $! >logs/olymptradeService-running.pid
+else
+  \cp -rf olymptradeService olymptradeService-running
+  nohup ./olymptradeService-running >/dev/null 2>error/olymptrade.log &
+  echo $! >logs/olymptradeService-running.pid
+fi
+
+# 重启 hsbService-running
+hsbService=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$hsbService" ]; then
+  kill -9 "$hsbService"
+  \cp -rf hsbService hsbService-running
+  nohup ./hsbService-running >/dev/null 2>error/hsb.log &
+  echo $! >logs/hsbService-running.pid
+else
+  \cp -rf hsbService hsbService-running
+  nohup ./hsbService-running >/dev/null 2>error/hsb.log &
+  echo $! >logs/hsbService-running.pid
+fi
+
+# 重启 binanceService-running
+binanceService=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$binanceService" ]; then
+  kill -9 "$binanceService"
+  \cp -rf binanceService binanceService-running
+  nohup ./binanceService-running >/dev/null 2>error/binance.log &
+  echo $! >logs/binanceService-running.pid
+else
+  \cp -rf binanceService binanceService-running
+  nohup ./binanceService-running >/dev/null 2>error/binance.log &
+  echo $! >logs/binanceService-running.pid
+fi
+
+# 重启 qxbrokerService-running
+qxbrokerService=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$qxbrokerService" ]; then
+  kill -9 "$qxbrokerService"
+  \cp -rf qxbrokerService qxbrokerService-running
+  nohup ./qxbrokerService-running >/dev/null 2>error/qxbroker.log &
+  echo $! >logs/qxbrokerService-running.pid
+else
+  \cp -rf qxbrokerService qxbrokerService-running
+  nohup ./qxbrokerService-running >/dev/null 2>error/qxbroker.log &
+  echo $! >logs/qxbrokerService-running.pid
+fi

@@ -1,0 +1,83 @@
+#!/bin/sh
+# 查看 apiService-running
+apiService_user=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $1}')
+apiService_starttime=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $5}')
+apiService_pid=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $2}')
+apiService_bin=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$apiService_pid" ]; then
+  printf "用户：$apiService_user   启动时间：$apiService_starttime 进程ID：$apiService_pid  执行路径：$apiService_bin\n"
+fi
+
+# 查看 huobiService-running
+huobiService_user=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $1}')
+huobiService_starttime=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $5}')
+huobiService_pid=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $2}')
+huobiService_bin=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$huobiService_pid" ]; then
+  printf "用户：$huobiService_user   启动时间：$huobiService_starttime 进程ID：$huobiService_pid  执行路径：$huobiService_bin\n"
+fi
+
+# 查看 sinaService-running
+sinaService_user=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $1}')
+sinaService_starttime=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $5}')
+sinaService_pid=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $2}')
+sinaService_bin=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$sinaService_pid" ]; then
+  printf "用户：$sinaService_user   启动时间：$sinaService_starttime 进程ID：$sinaService_pid  执行路径：$sinaService_bin\n"
+fi
+
+# 查看 raceoptionService-running
+raceoptionService_user=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $1}')
+raceoptionService_starttime=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $5}')
+raceoptionService_pid=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $2}')
+raceoptionService_bin=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$raceoptionService_pid" ]; then
+  printf "用户：$raceoptionService_user   启动时间：$raceoptionService_starttime 进程ID：$raceoptionService_pid  执行路径：$raceoptionService_bin\n"
+fi
+
+# 查看 liveoddsService-running
+liveoddsService_user=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $1}')
+liveoddsService_starttime=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $5}')
+liveoddsService_pid=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $2}')
+liveoddsService_bin=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$liveoddsService_pid" ]; then
+  printf "用户：$liveoddsService_user   启动时间：$liveoddsService_starttime 进程ID：$liveoddsService_pid  执行路径：$liveoddsService_bin\n"
+fi
+
+# 查看 olymptradeService-running
+olymptradeService_user=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $1}')
+olymptradeService_starttime=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $5}')
+olymptradeService_pid=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $2}')
+olymptradeService_bin=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$olymptradeService_pid" ]; then
+  printf "用户：$olymptradeService_user   启动时间：$olymptradeService_starttime 进程ID：$olymptradeService_pid  执行路径：$olymptradeService_bin\n"
+fi
+
+# 查看 hsbService-running
+hsbService_user=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $1}')
+hsbService_starttime=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $5}')
+hsbService_pid=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $2}')
+hsbService_bin=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$hsbService_pid" ]; then
+  printf "用户：$hsbService_user   启动时间：$hsbService_starttime 进程ID：$hsbService_pid  执行路径：$hsbService_bin\n"
+fi
+
+# 查看 binanceService-running
+binanceService_user=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $1}')
+binanceService_starttime=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $5}')
+binanceService_pid=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $2}')
+binanceService_bin=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$binanceService_pid" ]; then
+  printf "用户：$binanceService_user   启动时间：$binanceService_starttime 进程ID：$binanceService_pid  执行路径：$binanceService_bin\n"
+fi
+
+# 查看 qxbrokerService-running
+qxbrokerService_user=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $1}')
+qxbrokerService_starttime=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $5}')
+qxbrokerService_pid=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $2}')
+qxbrokerService_bin=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $8}')
+if [ "$qxbrokerService_pid" ]; then
+  printf "用户：$qxbrokerService_user   启动时间：$qxbrokerService_starttime 进程ID：$qxbrokerService_pid  执行路径：$qxbrokerService_bin\n"
+fi
+
+printf "\n"

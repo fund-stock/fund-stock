@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo -e "\033[35m 准备开始同步... \033[0m"
+
+PWD=$(pwd)
+
+IP=$(curl -s ip.sb)
+
+echo "您当前的服务器ip：$IP"
+
+if [[ -n "$IP" && "$IP" = "47.242.235.4" ]]; then
+    # shellcheck disable=SC2164
+    cd /home/yezhiming/work
+    rm -rf kline/
+    git clone -b asset http://8.129.23.111:5720/golang-group/kline.git
+    # shellcheck disable=SC2164
+    cd kline/
+    sh ./bin/build
+else
+    echo "IP address doesn't match"
+fi
+
+pwd
+

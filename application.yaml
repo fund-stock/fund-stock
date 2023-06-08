@@ -1,0 +1,88 @@
+# 项目基本配置
+
+## 应用名称
+APP_NAME: FundStock
+## 当前环境
+APP_ENV: local
+## 用以生成链接
+APP_URL: http://127.0.0.1
+## 应用服务端口
+APP_PORT: 8888
+# pprof 分析 打开后可以分析堆栈调用，cpu占用
+APP_PPROF: true
+# 是否启用https
+HTTPS: 0
+# 地区限制
+ADDRESS_LIMIT: true
+# 项目编码
+ITEM_CODE: SMO
+
+
+# 数据库连接信息
+DB_CONNECTION: mysql
+DB_HOST: 127.0.0.1
+# 端口
+DB_PORT: 3306
+# 表名
+DB_DATABASE: fund_stock
+# 用户名
+DB_USERNAME: root
+# 密码
+DB_PASSWORD: 123456_master
+# 数据表前缀
+DB_PREFIX: t_
+# 连接池配置
+DB_MAX_IDLE_CONNECTIONS: 25
+DB_MAX_LIFE_SECONDS: 300
+DB_MAX_OPEN_CONNECTIONS: 100
+
+
+# redis配置
+REDIS_HOST: 127.0.0.1
+# 没有密码，默认留空
+REDIS_PASSWORD:
+# 端口号
+REDIS_PORT: 6379
+# 默认用 0
+REDIS_DB: 0
+
+## 密码加密盐
+PW_SALT: xw2022-03-15
+
+
+# elastic 6.8.23
+# 启用或禁用嗅探器（默认启用）。
+ELASTIC_SNIFF: false
+# elasticsearch 服务地址，多个服务地址使用逗号分隔
+ELASTIC_URL: http://127.0.0.1:9200
+# 启用gzip压缩
+ELASTIC_GZIP: true
+
+
+# 邮件，目前用来给邮件通知我服务异常堆栈信息
+## 默认使用什么发送邮件
+EMAIL_TYPE: QQ
+## QQ邮箱配置
+QQ_EMAIL_ADDR: smtp.qq.com:587
+QQ_EMAIL_HOST: smtp.qq.com
+QQ_EMAIL_PASSWORD: aswydaxxalswbeee
+QQ_EMAIL_USER: mail@54zm.com
+## 谷歌邮箱配置
+GOOGLE_EMAIL_ADDR: smtp.gmail.com:465
+GOOGLE_EMAIL_HOST: smtp.gmail.com
+GOOGLE_EMAIL_PASSWORD: vwjbznpwupinewbu
+GOOGLE_EMAIL_USER: k4slibom@gmail.com
+
+# 数据表，这里不配置的话，默认用 kline_log 表
+KLINE_TABLE: kline_log
+
+# log 日志控制
+## mysql日志
+## mysql debug 日志
+LOG_MYSQL_DEBUG: true
+## mysql warn 日志
+LOG_MYSQL_ERROR: true
+## mysql error 日志
+LOG_MYSQL_WARN: true
+# 通知邮箱
+NOTIFY_EMAIL: mail@54zm.com

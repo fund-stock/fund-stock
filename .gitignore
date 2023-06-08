@@ -1,0 +1,11 @@
+!.gitignore
+.idea/
+tmp
+.env
+*.log
+goapi
+pprof*.gz
+apiService*
+huobiService*
+liveoddsService*
+.DS_Store

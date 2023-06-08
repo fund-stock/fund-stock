@@ -1,0 +1,67 @@
+#!/bin/bash
+
+echo -e "\033[35m 打包开始... \033[0m"
+
+appBuildDir=binary
+
+# 一键打包服务
+
+# 1、打包 client 接口
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/client/binary-go-client main.go
+
+# 1、打包 web 接口
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/web/binary-go-web service/binary-web/main.go
+
+# 1、打包 email 接口
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/email/binary-go-email service/binary-email/main.go
+
+# 2、打包 火币网 K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-huobi service/kline-huobi/main.go
+
+# 4、打包 raceoption K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-raceoption service/kline-raceoption/main.go
+
+# 6、打包 kline-olymptrade K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-olymptrade service/kline-olymptrade/main.go
+
+# 7、打包 kline-hsb K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-hsb service/kline-hsb/main.go
+
+# 8、打包 kline-binance K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-binance service/kline-binance/main.go
+
+# 9、打包 kline-qxbroker K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-qxbroker service/kline-qxbroker/main.go
+
+# 10、打包 kline-fxcm K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-fxcm service/kline-fxcm/main.go
+
+# 11、打包 kline-iqoption K线图socket采集服务
+GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-go-iqoption service/kline-iqoption/main.go
+
+## 3、打包 新浪 K线图采集服务
+#GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-sinaService service/kline-sina/main.go
+
+## 5、打包实时赔率计算服务
+#GOOS=linux GOARCH=amd64 go build -o $appBuildDir/kline/binary-liveoddsService service/liveodds/calculate.go
+
+echo -e "\033[35m Success... \033[0m"
+
+PWD=$(pwd)
+
+IP=$(curl -s ip.sb)
+
+echo "$IP"
+
+if [[ -n "$IP" && "$IP" = "47.242.235.4" ]]; then
+    cp -r "$appBuildDir"/kline/* /home/yezhiming/binary/kline
+    # shellcheck disable=SC2164
+    cd /home/yezhiming/binary/kline
+    ./update-kline.sh
+else
+    echo "IP address doesn't match"
+    rsync -a "$appBuildDir/kline/" "$PWD/logs/"
+fi
+
+pwd
+

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# 停止 apiService-running
+apiService=$(ps -ef | grep "/apiService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$apiService" ]; then
+  kill -9 "$apiService"
+fi
+
+# 停止 huobiService-running
+huobiService=$(ps -ef | grep "/huobiService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$huobiService" ]; then
+  kill -9 "$huobiService"
+fi
+
+# 停止 sinaService-running
+sinaService=$(ps -ef | grep "/sinaService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$sinaService" ]; then
+  kill -9 "$sinaService"
+fi
+
+# 停止 raceoptionService-running
+raceoptionService=$(ps -ef | grep "/raceoptionService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$raceoptionService" ]; then
+  kill -9 "$raceoptionService"
+fi
+
+# 停止 liveoddsService-running
+liveoddsService=$(ps -ef | grep "/liveoddsService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$liveoddsService" ]; then
+  kill -9 "$liveoddsService"
+fi
+
+# 停止 olymptradeService-running
+olymptradeService=$(ps -ef | grep "/olymptradeService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$olymptradeService" ]; then
+  kill -9 "$olymptradeService"
+fi
+
+# 停止 hsbService-running
+hsbService=$(ps -ef | grep "/hsbService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$hsbService" ]; then
+  kill -9 "$hsbService"
+fi
+
+# 停止 binanceService-running
+binanceService=$(ps -ef | grep "/binanceService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$binanceService" ]; then
+  kill -9 "$binanceService"
+fi
+
+# 停止 qxbrokerService-running
+qxbrokerService=$(ps -ef | grep "/qxbrokerService-running" | grep -v "grep" | awk '{print $2}')
+if [ "$qxbrokerService" ]; then
+  kill -9 "$qxbrokerService"
+fi

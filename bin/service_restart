@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# 重启 apiService
+apiService=$(ps -ef|grep "/iqoption-go-client" | grep -v "grep" | awk hh'{print $2}')
+if [ "$apiService" ]
+then
+  kill -9 "$apiService"
+  nohup ./iqoption-go-client > /dev/null 2>&1 & echo $!>logs/iqoption-go-client.pid
+else
+  nohup ./iqoption-go-client > /dev/null 2>&1 & echo $!>logs/iqoption-go-client.pid
+fi
+
+# 重启 liveoddsService
+liveoddsService=$(ps -ef|grep "/liveoddsService" | grep -v "grep" | awk '{print $2}')
+if [ "$liveoddsService" ]
+then
+  kill -9 "$liveoddsService"
+  nohup ./liveoddsService > /dev/null 2>&1 & echo $!>logs/liveoddsService.pid
+else
+  nohup ./liveoddsService > /dev/null 2>&1 & echo $!>logs/liveoddsService.pid
+fi
+
+## 重启 huobiService
+#huobiService=$(ps -ef|grep "/huobiService" | grep -v "grep" | awk '{print $2}')
+#if [ "$huobiService" ]
+#then
+#  kill -9 "$huobiService"
+#  nohup ./huobiService > /dev/null 2>&1 & echo $!>logs/huobiService.pid
+#else
+#  nohup ./huobiService > /dev/null 2>&1 & echo $!>logs/huobiService.pid
+#fi
