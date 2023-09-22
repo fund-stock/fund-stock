@@ -351,6 +351,129 @@ var GoRoutesColumns = struct {
 	DeletedAt: "deleted_at",
 }
 
+// GoStock [...]
+type GoStock struct {
+	ID        int64   `gorm:"primaryKey;column:id" json:"-"`
+	ProductID string  `gorm:"column:product_id" json:"productId"` // 产品id
+	Code      string  `gorm:"column:code" json:"code"`            // 代码
+	Name      string  `gorm:"column:name" json:"name"`            // 名称
+	Amount    float64 `gorm:"column:amount" json:"amount"`        // 金额
+	Nav       float64 `gorm:"column:nav" json:"nav"`              // 最新净值
+	Status    int     `gorm:"column:status" json:"status"`        // 状态：0-未启用，1-已启用
+	CreateAt  int64   `gorm:"column:create_at" json:"createAt"`   // 创建时间
+	UpdateAt  int64   `gorm:"column:update_at" json:"updateAt"`   // 更新时间
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoStock) TableName() string {
+	return "go_stock"
+}
+
+// GoStockColumns get sql column name.获取数据库列名
+var GoStockColumns = struct {
+	ID        string
+	ProductID string
+	Code      string
+	Name      string
+	Amount    string
+	Nav       string
+	Status    string
+	CreateAt  string
+	UpdateAt  string
+}{
+	ID:        "id",
+	ProductID: "product_id",
+	Code:      "code",
+	Name:      "name",
+	Amount:    "amount",
+	Nav:       "nav",
+	Status:    "status",
+	CreateAt:  "create_at",
+	UpdateAt:  "update_at",
+}
+
+// GoStockDay [...]
+type GoStockDay struct {
+	ID       int64     `gorm:"primaryKey;column:id" json:"-"`
+	Code     string    `gorm:"column:code" json:"code"`          // 代码
+	Name     string    `gorm:"column:name" json:"name"`          // 名称
+	Amount   float64   `gorm:"column:amount" json:"amount"`      // 金额
+	Nav      float64   `gorm:"column:nav" json:"nav"`            // 最新净值
+	DayTs    int64     `gorm:"column:day_ts" json:"dayTs"`       // 当天的时间戳
+	DayAt    time.Time `gorm:"column:day_at" json:"dayAt"`       // 当天的时间
+	CreateAt int64     `gorm:"column:create_at" json:"createAt"` // 创建时间
+	UpdateAt int64     `gorm:"column:update_at" json:"updateAt"` // 更新时间
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoStockDay) TableName() string {
+	return "go_stock_day"
+}
+
+// GoStockDayColumns get sql column name.获取数据库列名
+var GoStockDayColumns = struct {
+	ID       string
+	Code     string
+	Name     string
+	Amount   string
+	Nav      string
+	DayTs    string
+	DayAt    string
+	CreateAt string
+	UpdateAt string
+}{
+	ID:       "id",
+	Code:     "code",
+	Name:     "name",
+	Amount:   "amount",
+	Nav:      "nav",
+	DayTs:    "day_ts",
+	DayAt:    "day_at",
+	CreateAt: "create_at",
+	UpdateAt: "update_at",
+}
+
+// GoStockLog 股票实时数据表
+type GoStockLog struct {
+	ID       int64     `gorm:"primaryKey;column:id" json:"-"`
+	Code     string    `gorm:"column:code" json:"code"`          // 代码
+	Name     string    `gorm:"column:name" json:"name"`          // 名称
+	Amount   float64   `gorm:"column:amount" json:"amount"`      // 金额
+	Nav      float64   `gorm:"column:nav" json:"nav"`            // 最新净值
+	DayTs    int64     `gorm:"column:day_ts" json:"dayTs"`       // 当天的时间戳
+	DayAt    time.Time `gorm:"column:day_at" json:"dayAt"`       // 当天的时间
+	CreateAt int64     `gorm:"column:create_at" json:"createAt"` // 创建时间
+	UpdateAt int64     `gorm:"column:update_at" json:"updateAt"` // 更新时间
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoStockLog) TableName() string {
+	return "go_stock_log"
+}
+
+// GoStockLogColumns get sql column name.获取数据库列名
+var GoStockLogColumns = struct {
+	ID       string
+	Code     string
+	Name     string
+	Amount   string
+	Nav      string
+	DayTs    string
+	DayAt    string
+	CreateAt string
+	UpdateAt string
+}{
+	ID:       "id",
+	Code:     "code",
+	Name:     "name",
+	Amount:   "amount",
+	Nav:      "nav",
+	DayTs:    "day_ts",
+	DayAt:    "day_at",
+	CreateAt: "create_at",
+	UpdateAt: "update_at",
+}
+
 // SystemEmailRoutingNode [...]
 type SystemEmailRoutingNode struct {
 	ID              int64     `gorm:"primaryKey;column:id" json:"-"`                  // 邮箱路由节点配置表ID
