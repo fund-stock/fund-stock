@@ -59,3 +59,12 @@ LOG_MYSQL_ERROR: true
 LOG_MYSQL_WARN: true
 # 通知邮箱
 NOTIFY_EMAIL: mail@54zm.com
+
+
+# bark 通知配置
+bark:
+  url: https://api.day.app/
+  key:
+    mac: YvemvqzPAgvc2ASqwcP2KH
+    iphone: nPuFoXfYsMpVrUaqU8to99
+  logo: https://avatars.githubusercontent.com/u/135967790?s=400&u=f1aa7ed0d678407a6cdf3e44afd21831a487a47a&v=4

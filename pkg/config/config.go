@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"goapi/pkg/logger"
+	"strings"
 )
 
 // Viper Viper 库实例
@@ -14,6 +15,8 @@ type StrMap map[string]interface{}
 
 // init() 函数在 import 的时候立刻被加载
 func init() {
+	ConfigPath := "."
+START:
 	// 1. 初始化 Viper 库
 	Viper = viper.New()
 	// 2. 设置文件名称
@@ -22,11 +25,15 @@ func init() {
 	//             "props", "prop", "env", "dotenv"
 	Viper.SetConfigType("yaml")
 	// 4. 环境变量配置文件查找的路径，相对于 main.go
-	Viper.AddConfigPath(".")
+	Viper.AddConfigPath(ConfigPath)
 
 	// 5. 开始读根目录下的 .env 文件，读不到会报错
 	err := Viper.ReadInConfig()
 	if err != nil {
+		if strings.Contains(err.Error(), "Not Found") {
+			ConfigPath = "../"
+			goto START
+		}
 		logger.Error(err)
 	}
 	// 6. 设置环境变量前缀，用以区分 Go 的系统环境变量
