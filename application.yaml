@@ -15,7 +15,7 @@ HTTPS: 0
 # 地区限制
 ADDRESS_LIMIT: true
 # 项目编码
-ITEM_CODE: SMO
+ITEM_CODE: SHARES
 
 
 # 数据库连接信息
@@ -47,34 +47,7 @@ REDIS_PORT: 6379
 REDIS_DB: 0
 
 ## 密码加密盐
-PW_SALT: xw2022-03-15
-
-
-# elastic 6.8.23
-# 启用或禁用嗅探器（默认启用）。
-ELASTIC_SNIFF: false
-# elasticsearch 服务地址，多个服务地址使用逗号分隔
-ELASTIC_URL: http://127.0.0.1:9200
-# 启用gzip压缩
-ELASTIC_GZIP: true
-
-
-# 邮件，目前用来给邮件通知我服务异常堆栈信息
-## 默认使用什么发送邮件
-EMAIL_TYPE: QQ
-## QQ邮箱配置
-QQ_EMAIL_ADDR: smtp.qq.com:587
-QQ_EMAIL_HOST: smtp.qq.com
-QQ_EMAIL_PASSWORD: aswydaxxalswbeee
-QQ_EMAIL_USER: mail@54zm.com
-## 谷歌邮箱配置
-GOOGLE_EMAIL_ADDR: smtp.gmail.com:465
-GOOGLE_EMAIL_HOST: smtp.gmail.com
-GOOGLE_EMAIL_PASSWORD: vwjbznpwupinewbu
-GOOGLE_EMAIL_USER: k4slibom@gmail.com
-
-# 数据表，这里不配置的话，默认用 kline_log 表
-KLINE_TABLE: kline_log
+PW_SALT: xw2023-06-08
 
 # log 日志控制
 ## mysql日志

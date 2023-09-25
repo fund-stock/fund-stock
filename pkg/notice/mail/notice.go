@@ -9,7 +9,6 @@ import (
 	"goapi/pkg/logger"
 	"goapi/pkg/notice/telegram"
 	"goapi/pkg/redis"
-	"net/url"
 	"runtime/debug"
 )
 
@@ -80,47 +79,6 @@ func checkGrandTotal(address, t string, InitNum, GrandTotalExTime, GrandTotal in
 	return false
 }
 
-// 重启 socket 通知
-func msgRebootSocket(service, symbol string, num interface{}, lastRuntime int64) map[string]interface{} {
-	info := cmap.New().Items()
-	info["title"] = fmt.Sprintf(`
-断线重连==
-【环境：%v】
-【服务：%v】
-【币种：%v】
-【上次socket运行：%v 秒 】
-`, conf.GetString("app.env"), service, symbol, lastRuntime/1000)
-	info["content"] = fmt.Sprintf("这是第【%v】次socket断线重连", num)
-	return info
-}
-
-// 赔率变动
-func msgRateChange(service, tips string) map[string]interface{} {
-	info := cmap.New().Items()
-	info["title"] = fmt.Sprintf("环境【%v】，服务【%v】赔率变动", conf.GetString("app.env"), service)
-	info["content"] = tips
-	return info
-}
-
-// 数据异常
-func msgDataAbnormal(c *gin.Context, tips string) map[string]interface{} {
-	info := cmap.New().Items()
-	info["title"] = fmt.Sprintf("环境【%v】==K线图历史数据异常通知，当前查询历史数据小于150条：", conf.GetString("app.env"))
-	info["content"] = fmt.Sprintf(
-		`请求 reqId 为%v<br>
-						用户IP【<a href="https://www.ip138.com/iplookup.asp?ip=%v&action=2">%v</a>】，<br>
-						请求头信息：%v<br>
-						查询范围：%v<br>
-						请求的url为：%v<br>`,
-		logger.RequestId,
-		c.ClientIP(), c.ClientIP(),
-		c.Request.Header,
-		tips,
-		c.Request.URL,
-	)
-	return info
-}
-
 // 堆栈异常信息
 func msgStack(c *gin.Context, r interface{}, description, errInfo string) map[string]interface{} {
 	Info := cmap.New().Items()
@@ -161,34 +119,6 @@ func msgNetworkAnomaly(title interface{}, c *gin.Context, r, description, errInf
 	return brokenInfo
 }
 
-// Socket网络异常
-func msgSocketNetworkAnomaly(name string, proxy *url.URL) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf(`
-环境【%v】
-名称【%v】
-socket采集连接异常，请查看详细信息
-`, conf.GetString("app.env"), name)
-	if proxy != nil {
-		brokenInfo["content"] = fmt.Sprintf(`当前使用的代理ip【%v】链接失败`, proxy.String())
-	} else {
-		brokenInfo["content"] = fmt.Sprintf(`正常链接失败，未使用代理`)
-	}
-	return brokenInfo
-}
-
-// Socket关闭
-func msgSocketClose(name, description string) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf(`
-环境【%v】
-服务【%v】
-socket已关闭，请查看详细信息
-`, conf.GetString("app.env"), name)
-	brokenInfo["content"] = description
-	return brokenInfo
-}
-
 // 服务堆栈异常
 func msgServiceAnomaly(name string, r interface{}) map[string]interface{} {
 	brokenInfo := cmap.New().Items()
@@ -202,55 +132,11 @@ func msgServiceAnomaly(name string, r interface{}) map[string]interface{} {
 	return brokenInfo
 }
 
-// 心跳检测，服务健康通知
-func msgHeartbeatAnomaly(name, msg string) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf("环境【%v】【%v】服务异常，请查看详细信息", conf.GetString("app.env"), name)
-	brokenInfo["content"] = msg
-	return brokenInfo
-}
-
-// 心跳检测，服务健康通知
-func msgAssetSleep(AssetsCode, msg string) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf("环境【%v】资产(%v)变动，请查看详细信息", conf.GetString("app.env"), AssetsCode)
-	brokenInfo["content"] = msg
-	return brokenInfo
-}
-
-// 检测切换数据源
-func msgCheckSwitchSource(msg string) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf("环境【%v】自动切换数据源", conf.GetString("app.env"))
-	brokenInfo["content"] = msg
-	return brokenInfo
-}
-
-// 没有可以切换的数据源
-func msgNoSwitchSource(msg string) map[string]interface{} {
-	brokenInfo := cmap.New().Items()
-	brokenInfo["title"] = fmt.Sprintf("环境【%v】无数据源", conf.GetString("app.env"))
-	brokenInfo["content"] = msg
-	return brokenInfo
-}
-
 // 发送通知
 
 func Notice(t string, data interface{}) {
 	var Info map[string]interface{}
 	switch t {
-	case "msgRebootSocket": // 重启 socket 通知
-		arr := data.(map[string]interface{})
-		Info = msgRebootSocket(arr["service"].(string), arr["symbol"].(string), arr["num"].(int64), arr["lastRuntime"].(int64))
-		break
-	case "msgRateChange": // 赔率变动通知
-		arr := data.(map[string]interface{})
-		Info = msgRateChange(arr["service"].(string), arr["tips"].(string))
-		break
-	case "msgDataAbnormal":
-		arr := data.(map[string]interface{})
-		Info = msgDataAbnormal(arr["c"].(*gin.Context), arr["tips"].(string))
-		break
 	case "msgStack":
 		arr := data.(map[string]interface{})
 		Info = msgStack(arr["c"].(*gin.Context), arr["r"], arr["description"].(string), arr["errInfo"].(string))
@@ -259,39 +145,11 @@ func Notice(t string, data interface{}) {
 		arr := data.(map[string]interface{})
 		Info = msgNetworkAnomaly(arr["title"], arr["c"].(*gin.Context), arr["r"], arr["description"], arr["errInfo"])
 		break
-	case "msgSocketNetworkAnomaly":
-		arr := data.(map[string]interface{})
-		Info = msgSocketNetworkAnomaly(arr["name"].(string), arr["proxy"].(*url.URL))
-		break
-	case "msgSocketClose":
-		arr := data.(map[string]interface{})
-		Info = msgSocketClose(arr["name"].(string), arr["description"].(string))
-		break
 	case "msgServiceAnomaly":
 		arr := data.(map[string]interface{})
 		Info = msgServiceAnomaly(arr["name"].(string), arr["r"])
 		break
-	case "msgHeartbeatAnomaly":
-		arr := data.(map[string]interface{})
-		Info = msgHeartbeatAnomaly(arr["name"].(string), arr["msg"].(string))
-		break
-	case "msgAssetSleep":
-		arr := data.(map[string]interface{})
-		Info = msgAssetSleep(arr["assets_code"].(string), arr["msg"].(string))
-		break
-	case "msgCheckSwitchSource":
-		arr := data.(map[string]interface{})
-		Info = msgCheckSwitchSource(arr["msg"].(string))
-		break
-	case "msgNoSwitchSource":
-		arr := data.(map[string]interface{})
-		Info = msgNoSwitchSource(arr["msg"].(string))
-		break
 	default:
-		return
-	}
-	// 时差不进行通知，避免通知泛滥d
-	if helpers.InArray(t, []string{"msgSocketClose", "msgRebootSocket"}) {
 		return
 	}
 	// telegram 通知

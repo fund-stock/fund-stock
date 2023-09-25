@@ -13,10 +13,10 @@ const (
 )
 
 func Md5(password string) string {
-	year := "2021"
+	year := "2023"
 	w := md5.New()
 	// 拼接密码
-	str := password + config.Env("PW_SALT", "iszmxw").(string)
+	str := password + config.GetString("PW_SALT", "iszmxw")
 	_, _ = io.WriteString(w, str) // 将str写入到w中
 	str1 := fmt.Sprintf("%x", w.Sum(nil)) + year
 	w1 := md5.New()
