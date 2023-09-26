@@ -4,50 +4,6 @@ import (
 	"time"
 )
 
-// AppPassLimitHost app服务器访问白名单表
-type AppPassLimitHost struct {
-	ID         int64     `gorm:"primaryKey;column:id" json:"-"`        // app服务器访问白名单表主键自增ID
-	PassHost   string    `gorm:"column:pass_host" json:"passHost"`     // 活跃的域名
-	CreateDate time.Time `gorm:"column:create_date" json:"createDate"` // 创建日期
-	UpdateDate time.Time `gorm:"column:update_date" json:"updateDate"` // 修改日期
-	Creator    string    `gorm:"column:creator" json:"creator"`        // 添加人ID
-	Updater    string    `gorm:"column:updater" json:"updater"`        // 更新人ID
-	ItemCode   string    `gorm:"column:item_code" json:"itemCode"`     // 关联项目编码
-	IsShow     int       `gorm:"column:is_show" json:"isShow"`         // 是否展示 1是 0否
-	IsDelete   int       `gorm:"column:is_delete" json:"isDelete"`     // 是否删除 1是 0否
-	PassLevel  int       `gorm:"column:pass_level" json:"passLevel"`   // 活跃等级
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *AppPassLimitHost) TableName() string {
-	return "app_pass_limit_host"
-}
-
-// AppPassLimitHostColumns get sql column name.获取数据库列名
-var AppPassLimitHostColumns = struct {
-	ID         string
-	PassHost   string
-	CreateDate string
-	UpdateDate string
-	Creator    string
-	Updater    string
-	ItemCode   string
-	IsShow     string
-	IsDelete   string
-	PassLevel  string
-}{
-	ID:         "id",
-	PassHost:   "pass_host",
-	CreateDate: "create_date",
-	UpdateDate: "update_date",
-	Creator:    "creator",
-	Updater:    "updater",
-	ItemCode:   "item_code",
-	IsShow:     "is_show",
-	IsDelete:   "is_delete",
-	PassLevel:  "pass_level",
-}
-
 // GoAccount [...]
 type GoAccount struct {
 	ID             uint64         `gorm:"primaryKey;column:id" json:"-"`
@@ -91,6 +47,56 @@ var GoAccountColumns = struct {
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
 	DeletedAt: "deleted_at",
+}
+
+// GoAppPassLimitHost app服务器访问白名单表
+type GoAppPassLimitHost struct {
+	ID            int64     `gorm:"primaryKey;column:id" json:"-"`              // 服务器访问白名单表主键自增ID
+	PassHost      string    `gorm:"column:pass_host" json:"passHost"`           // 活跃的域名
+	CreateDate    time.Time `gorm:"column:create_date" json:"createDate"`       // 创建日期
+	UpdateDate    time.Time `gorm:"column:update_date" json:"updateDate"`       // 修改日期
+	Creator       string    `gorm:"column:creator" json:"creator"`              // 添加人ID
+	Updater       string    `gorm:"column:updater" json:"updater"`              // 更新人ID
+	ItemCode      string    `gorm:"column:item_code" json:"itemCode"`           // 关联项目编码
+	IsShow        int       `gorm:"column:is_show" json:"isShow"`               // 是否展示 1是 0否
+	IsDelete      int       `gorm:"column:is_delete" json:"isDelete"`           // 是否删除 1是 0否
+	PassLevel     int       `gorm:"column:pass_level" json:"passLevel"`         // 活跃等级
+	ReleaseSource string    `gorm:"column:release_source" json:"releaseSource"` // 放行源 (放行ip来源标注）
+	ReleaseModule string    `gorm:"column:release_module" json:"releaseModule"` // 放行模块 (对应系统模块)
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoAppPassLimitHost) TableName() string {
+	return "go_app_pass_limit_host"
+}
+
+// GoAppPassLimitHostColumns get sql column name.获取数据库列名
+var GoAppPassLimitHostColumns = struct {
+	ID            string
+	PassHost      string
+	CreateDate    string
+	UpdateDate    string
+	Creator       string
+	Updater       string
+	ItemCode      string
+	IsShow        string
+	IsDelete      string
+	PassLevel     string
+	ReleaseSource string
+	ReleaseModule string
+}{
+	ID:            "id",
+	PassHost:      "pass_host",
+	CreateDate:    "create_date",
+	UpdateDate:    "update_date",
+	Creator:       "creator",
+	Updater:       "updater",
+	ItemCode:      "item_code",
+	IsShow:        "is_show",
+	IsDelete:      "is_delete",
+	PassLevel:     "pass_level",
+	ReleaseSource: "release_source",
+	ReleaseModule: "release_module",
 }
 
 // GoFund [...]
@@ -412,47 +418,6 @@ func (m *GoStockDay) TableName() string {
 
 // GoStockDayColumns get sql column name.获取数据库列名
 var GoStockDayColumns = struct {
-	ID       string
-	Code     string
-	Name     string
-	Amount   string
-	Nav      string
-	DayTs    string
-	DayAt    string
-	CreateAt string
-	UpdateAt string
-}{
-	ID:       "id",
-	Code:     "code",
-	Name:     "name",
-	Amount:   "amount",
-	Nav:      "nav",
-	DayTs:    "day_ts",
-	DayAt:    "day_at",
-	CreateAt: "create_at",
-	UpdateAt: "update_at",
-}
-
-// GoStockLog 股票实时数据表
-type GoStockLog struct {
-	ID       int64     `gorm:"primaryKey;column:id" json:"-"`
-	Code     string    `gorm:"column:code" json:"code"`          // 代码
-	Name     string    `gorm:"column:name" json:"name"`          // 名称
-	Amount   float64   `gorm:"column:amount" json:"amount"`      // 金额
-	Nav      float64   `gorm:"column:nav" json:"nav"`            // 最新净值
-	DayTs    int64     `gorm:"column:day_ts" json:"dayTs"`       // 当天的时间戳
-	DayAt    time.Time `gorm:"column:day_at" json:"dayAt"`       // 当天的时间
-	CreateAt int64     `gorm:"column:create_at" json:"createAt"` // 创建时间
-	UpdateAt int64     `gorm:"column:update_at" json:"updateAt"` // 更新时间
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *GoStockLog) TableName() string {
-	return "go_stock_log"
-}
-
-// GoStockLogColumns get sql column name.获取数据库列名
-var GoStockLogColumns = struct {
 	ID       string
 	Code     string
 	Name     string

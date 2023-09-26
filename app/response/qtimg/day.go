@@ -14,11 +14,11 @@ type StockData struct {
 
 // StockInfo 结构体，包含"info"字段的数据
 type StockInfo struct {
-	Day     [][]string  `json:"day"`
-	Qt      QtData      `json:"qt"`
-	MxPrice MxPriceData `json:"mx_price"`
-	Prec    string      `json:"prec"`
-	Version string      `json:"version"`
+	Day     [][]interface{} `json:"day"`
+	Qt      QtData          `json:"qt"`
+	MxPrice MxPriceData     `json:"mx_price"`
+	Prec    string          `json:"prec"`
+	Version string          `json:"version"`
 }
 
 // QtData 结构体，包含"qt"字段的数据

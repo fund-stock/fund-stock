@@ -44,7 +44,7 @@ func dataBase() map[string]interface{} {
 
 func GetPassLimitHostList(passLevel int) []string {
 	var result []string
-	mysql.DB.Debug().Model(models.AppPassLimitHost{}).Where(map[string]interface{}{
+	mysql.DB.Debug().Model(models.GoAppPassLimitHost{}).Where(map[string]interface{}{
 		"is_show":    1,
 		"is_delete":  0,
 		"pass_level": passLevel,
