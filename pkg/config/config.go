@@ -31,7 +31,7 @@ START:
 	err := Viper.ReadInConfig()
 	if err != nil {
 		if strings.Contains(err.Error(), "Not Found") {
-			ConfigPath = "../"
+			ConfigPath += "../"
 			goto START
 		}
 		logger.Error(err)

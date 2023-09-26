@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"goapi/app/models"
 	"goapi/bootstrap"
 	"goapi/config"
@@ -10,7 +11,7 @@ import (
 	"goapi/pkg/logger"
 	"goapi/pkg/mysql"
 	"goapi/serve/binary-stock/client"
-	"goapi/serve/binary-stock/params"
+	"goapi/serve/binary-stock/response/qtimg"
 	"time"
 )
 
@@ -34,10 +35,13 @@ func init() {
 }
 
 func main() {
-	// stockCode := "005819"
-	collect := map[int]map[string]string{
-		0: {"code": "002261"},
-	}
+	// 声明一个切片来存储 map
+	var collect []map[string]string
+	// 添加 map 到切片
+	collect = append(collect,
+		map[string]string{"code": "sz002261"},
+		map[string]string{"code": "sz002194"},
+	)
 	for _, item := range collect {
 		go StartCollect(item["code"])
 	}
@@ -48,54 +52,29 @@ func main() {
 
 // 采集
 
-func StartCollect(fundCode string) {
-	data, err := client.GetStockDetail(fundCode)
-	if err != nil {
-		logger.Error(err)
-		return
-	}
-	DB := models.GoFundMgr(mysql.DB)
-	options, err := DB.Debug().GetByOption(DB.WithCode(fundCode))
-	if err != nil && !models.IsNotFound(err) {
-		logger.Error(err)
-		return
-	}
-	if options.ID == 0 {
-		DB.Debug().Create(&models.GoFund{
-			Code:      data.MaterialInfo.FundCode,
-			ProductID: data.MaterialInfo.ProductId,
-			Name:      data.MaterialInfo.FundBrief.FundNameAbbr,
-			Amount:    0,
-			Nav:       0,
-			Status:    0,
-			CreateAt:  time.Now().UnixMilli(),
-			UpdateAt:  time.Now().UnixMilli(),
-		})
-	}
+func StartCollect(stockCode string) {
 	// 获取每天的历史数据
-	currentPage := 1
-	HistoryData := client.GetHistoryData(data.MaterialInfo.ProductId, currentPage)
-	if HistoryData.Success {
-		go saveData(fundCode, data.MaterialInfo.FundBrief.FundNameAbbr, HistoryData)
-		//for currentPage < HistoryData.TotalPages {
-		//	time.Sleep(time.Second * 1)
-		//	currentPage = currentPage + 1
-		//	res := client.GetHistoryData(data.MaterialInfo.ProductId, currentPage)
-		//	if res.Success {
-		//		saveData(fundCode, data.MaterialInfo.FundBrief.FundNameAbbr, res)
-		//	}
-		//}
+	HistoryData := client.GetHistoryData(stockCode)
+	if HistoryData.Code == 0 && len(HistoryData.Data.StockInfo.Day) > 0 {
+		go saveData(stockCode, HistoryData)
 	}
 }
 
 // 采集每天的数据
 
-func saveData(fundCode, name string, HistoryData params.HistoryData) {
-	for _, item := range HistoryData.List {
-		DB := models.GoFundDayMgr(mysql.DB)
-		t, _ := time.Parse("2006-01-02", item.NetValueDate)
-		logger.Info(t.Format("2006-01-02 15:04:05.999"), "===", t.UnixMilli(), "===", item.NetValueDate, "===", item.NetValue, "===", item.TotalNetValue, "===", item.DayOfGrowth)
-		options, err := DB.Debug().GetByOption(DB.WithCode(fundCode), DB.WithDayAt(t))
+func saveData(stockCode string, HistoryData qtimg.Resp) {
+	DayData := HistoryData.Data.StockInfo.Day
+	Info := HistoryData.Data.StockInfo.Qt.Info
+	fmt.Println(Info)
+	fmt.Println(DayData)
+	fmt.Println(HistoryData.Data.StockInfo.Day)
+	for _, item := range DayData {
+		fmt.Println(item[0], item[1], item[2], item[3], item[4], item[5])
+		DB := models.GoStockDayMgr(mysql.DB)
+		//
+		t, _ := time.Parse("2006-01-02", item[0].(string))
+		logger.Info(t.Format("2006-01-02 15:04:05.999"), "===", t.UnixMilli(), "===", item[1], "===", item[2], "===", item[3], "===", item[4], "===", item[5])
+		options, err := DB.Debug().GetByOption(DB.WithCode(stockCode), DB.WithDayAt(t))
 		if err != nil && !models.IsNotFound(err) {
 			logger.Error(err)
 			return
@@ -104,10 +83,10 @@ func saveData(fundCode, name string, HistoryData params.HistoryData) {
 			continue
 		}
 		DB.Debug().Create(&models.GoFundDay{
-			Code:     fundCode,
-			Name:     name,
+			Code:     stockCode,
+			Name:     Info[1],
 			Amount:   0,
-			Nav:      helpers.StrToFloat64(item.TotalNetValue),
+			Nav:      helpers.StrToFloat64(item[2].(string)),
 			DayTs:    t.UnixMilli(),
 			DayAt:    t,
 			CreateAt: time.Now().UnixMilli(),

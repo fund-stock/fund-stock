@@ -1,10 +1,12 @@
-package client
+package test
 
 import (
+	"fmt"
 	"goapi/bootstrap"
 	"goapi/config"
 	conf "goapi/pkg/config"
 	"goapi/pkg/logger"
+	"goapi/serve/binary-stock/client"
 	"testing"
 	"time"
 )
@@ -15,19 +17,11 @@ func init() {
 	// 初始化配置信息
 	config.Initialize()
 	// 定义日志目录
-	logger.Init("binary-stock")
-	//AppPort := flag.Int64("APP_PORT", conf.GetInt64("app.port"), "服务端口")
-	// 初始化 SQL
-	logger.Info("初始化 SQL")
-	bootstrap.SetupDB()
-	// 初始化 Redis
-	logger.Info("初始化 Redis")
-	db := conf.GetInt("redis.db")
-	bootstrap.SetupRedis(db)
-	defer bootstrap.RedisClose()
+	logger.Init("binary-stock-test")
 }
 
-func Test(t *testing.T) {
+func TestGetHistoryData(t *testing.T) {
+	fmt.Println(1212)
 	// 初始化 SQL
 	logger.Info("初始化 SQL")
 	bootstrap.SetupDB()
@@ -36,4 +30,9 @@ func Test(t *testing.T) {
 	db := conf.GetInt("redis.db")
 	bootstrap.SetupRedis(db)
 	defer bootstrap.RedisClose()
+	fmt.Println("测试")
+	client.GetHistoryData("sz002194")
+	client.GetHistoryData("sz002261")
+	time.Sleep(time.Second * 20)
+	//TxClient("sz002261")
 }
