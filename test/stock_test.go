@@ -31,8 +31,14 @@ func TestGetHistoryData(t *testing.T) {
 	bootstrap.SetupRedis(db)
 	defer bootstrap.RedisClose()
 	fmt.Println("测试")
-	client.GetHistoryData("sz002194")
-	client.GetHistoryData("sz002261")
+	//client.GetHistoryData("sz002194")
+	//client.GetHistoryData("sz002261")
+	minute, err := client.GetMinute("sz002261")
+	if err != nil {
+		return
+	}
+	fmt.Println(minute)
+	fmt.Println(minute)
 	time.Sleep(time.Second * 20)
 	//TxClient("sz002261")
 }

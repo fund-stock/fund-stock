@@ -4,6 +4,7 @@ package helpers
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/axgle/mahonia"
 	"goapi/pkg/logger"
 	"strconv"
 	"strings"
@@ -94,4 +95,13 @@ func CloseDataConvert(close string) []float64 {
 		floatList = append(floatList, StrToFloat64(item))
 	}
 	return floatList
+}
+
+// ConvertToString 字符集转换
+func ConvertToString(src string, srcCode string, tagCode string) string {
+	srcCoder := mahonia.NewDecoder(srcCode)
+	srcResult := srcCoder.ConvertString(src)
+	tagCoder := mahonia.NewDecoder(tagCode)
+	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
+	return string(cdata)
 }

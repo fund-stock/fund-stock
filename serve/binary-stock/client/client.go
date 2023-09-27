@@ -3,49 +3,52 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
+	"goapi/pkg/helpers"
 	"goapi/pkg/logger"
-	"goapi/serve/binary-stock/params"
 	"goapi/serve/binary-stock/response/qtimg"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func GetStockDetail(id string) (params.Data, error) {
-	var data params.Data
-	url := "https://www.fund123.cn/matiaria?fundCode=" + id
-	fmt.Println(url)
-	resp, err := http.Get(url)
+// 获取分时原始数据
+
+func GetMinute(code string) (*qtimg.Minute, error) {
+	// 开始获取
+	out := SendGet(fmt.Sprintf("https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=%v", code), "")
+	out = strings.Replace(out, code, "info", -1)
+	var info qtimg.MinuteWWW
+	err := json.Unmarshal([]byte(out), &info)
 	if err != nil {
-		logger.Error(err)
-		return data, err
+		return nil, err
 	}
-	defer func(Body io.ReadCloser) {
-		err = Body.Close()
-		if err != nil {
-			logger.Error(err)
+	var sumPrice float64
+	var sumVol int64
+	var tmp qtimg.Minute
+	if info.Code == 0 {
+		if len(info.Data.Info.QT.Info) > 4 {
+			tmp.PrePrice = helpers.StrToFloat64(info.Data.Info.QT.Info[4])
 		}
-	}(resp.Body)
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-	if err != nil {
-		logger.Error(err)
-		return data, err
-	}
-	doc.Find("script").Each(func(index int, s *goquery.Selection) {
-		scriptContent := s.Text()
-		if strings.Contains(scriptContent, "window.context =") {
-			context := strings.Replace(scriptContent, "window.context =", "", 1)
-			context = strings.TrimRight(strings.TrimSpace(context), ";")
-			fmt.Println(context)
-			err = json.Unmarshal([]byte(context), &data)
-			if err != nil {
-				return
+		// index := len(info.Data.Info.Data.Data) - 1
+		for _, v := range info.Data.Info.Data.Data {
+			out := strings.Split(v, " ")
+			if len(out) == 4 {
+				minfo := qtimg.MinuteInfo{
+					Time:  out[0],
+					Price: helpers.StrToFloat64(out[1]),
+					Vol:   int64(helpers.StringToInt(out[2])),
+				}
+				minfo.Vol = minfo.Vol - sumVol
+				sumVol += minfo.Vol // 总成交量
+				sumPrice += minfo.Price * float64(minfo.Vol)
+				if sumVol > 0 {
+					minfo.Ave = helpers.Decimal(sumPrice/float64(sumVol), 2)
+				}
+				tmp.List = append(tmp.List, minfo)
 			}
 		}
-	})
-	return data, nil
+	}
+	return &tmp, nil
 }
 
 // 获取历史数据
