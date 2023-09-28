@@ -1,48 +1,20 @@
-package test
+package task_plan
 
 import (
 	"fmt"
 	cmap "github.com/orcaman/concurrent-map"
 	"github.com/shopspring/decimal"
-	"goapi/bootstrap"
-	"goapi/config"
-	conf "goapi/pkg/config"
 	"goapi/pkg/logger"
 	"goapi/pkg/notice"
 	"goapi/serve/binary-stock/client"
-	"testing"
 	"time"
 )
 
-func init() {
-	var cstZone = time.FixedZone("CST", 8*3600) // 东八
-	time.Local = cstZone
-	// 初始化配置信息
-	config.Initialize()
-	// 定义日志目录
-	logger.Init("binary-stock-test")
-}
-
-func TestGetHistoryData(t *testing.T) {
-	// 初始化 SQL
-	logger.Info("初始化 SQL")
-	bootstrap.SetupDB()
-	// 初始化 Redis
-	logger.Info("初始化 Redis")
-	db := conf.GetInt("redis.db")
-	bootstrap.SetupRedis(db)
-	defer bootstrap.RedisClose()
-	fmt.Println("测试")
-	//client.GetHistoryData("sz002194")
-	//client.GetHistoryData("sz002261")
-	code := "sz002528"
-	code = "sz002261"
-	AnalyzeMarket(code)
-	time.Sleep(time.Second * 60)
-}
-
 // 分析市场行情
-func AnalyzeMarket(code string) {
+
+func AnalyzeMarket() {
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+	code := "sz002261"
 	minute, err := client.GetMinute(code)
 	if err != nil {
 		logger.Error(err)
