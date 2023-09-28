@@ -32,7 +32,7 @@ func main() {
 	bootstrap.SetupRedis(db)
 	defer bootstrap.RedisClose()
 	// 新建一个定时任务对象 根据 cron 表达式进行时间调度，cron 可以精确到秒，大部分表达式格式也是从秒开始。
-	crontab := cron.New() // 默认从分开始进行时间调度，精确到秒
+	crontab := cron.New(cron.WithSeconds()) // 默认从分开始进行时间调度，精确到秒
 	task_route.RegisterTaskRoutes(crontab)
 	// 启动定时器
 	crontab.Start()
