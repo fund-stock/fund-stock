@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"testing"
@@ -9,10 +10,8 @@ import (
 )
 
 func TestGotify(t *testing.T) {
-	i := 0
-	for i < 1000 {
-		i++
-		go func() {
+	for i := 0; i < 1000; i++ {
+		go func(i int) {
 			form, err := http.PostForm("https://gotify.ethanyep.cn/message?token=AWxSCZ.uG4nV4zV",
 				url.Values{
 					"title":   {"恭喜您获利成功"},
@@ -22,8 +21,17 @@ func TestGotify(t *testing.T) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Println(form.Body)
-		}()
+			defer form.Body.Close() // 关闭响应体
+
+			body, err := ioutil.ReadAll(form.Body)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			fmt.Println("Response Body:", string(body))
+		}(i)
 		time.Sleep(time.Millisecond * 100)
 	}
+	time.Sleep(time.Second) // 等待goroutines完成
 }

@@ -22,6 +22,9 @@ func init() {
 	config.Initialize()
 	// 定义日志目录
 	logger.Init("binary-stock")
+}
+
+func main() {
 	//AppPort := flag.Int64("APP_PORT", conf.GetInt64("app.port"), "服务端口")
 	flag.Parse()
 	// 初始化 SQL
@@ -32,9 +35,6 @@ func init() {
 	db := conf.GetInt("redis.db")
 	bootstrap.SetupRedis(db)
 	defer bootstrap.RedisClose()
-}
-
-func main() {
 	// 声明一个切片来存储 map
 	var collect []map[string]string
 	// 添加 map 到切片

@@ -44,10 +44,13 @@ func (rdb *Redis) ConnectDB(selectDB int) *Redis {
 			DB:   rdb.DefaultDB, // use default DB
 		})
 	}
-	_, err = rdb.Client.Ping().Result()
+PING:
+	res, err := rdb.Client.Ping().Result()
 	if err != nil {
 		fmt.Println("redis连接错误" + err.Error())
+		goto PING
 	}
+	fmt.Println("redis连接成功：" + res)
 	return rdb
 }
 
