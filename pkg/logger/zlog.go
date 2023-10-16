@@ -90,6 +90,10 @@ func WithContext(ctx *gin.Context) *zap.Logger {
 
 // Error 当存在错误时记录日志
 func Error(err error) {
+	if Logger == nil {
+		fmt.Println(RequestId, "错误日志", err)
+		return
+	}
 	if len(RequestId) > 0 {
 		Logger.WithOptions(zap.AddCallerSkip(1)).Info("错误日志", zap.String("RequestId", RequestId), zap.Any("详细内容", err))
 	} else {
@@ -99,6 +103,10 @@ func Error(err error) {
 
 // Info 记录日志
 func Info(info ...interface{}) {
+	if Logger == nil {
+		fmt.Println(RequestId, fmt.Sprint(info...))
+		return
+	}
 	if len(RequestId) > 0 {
 		Logger.WithOptions(zap.AddCallerSkip(1)).Info(
 			"调试日志",

@@ -16,6 +16,7 @@ type StrMap map[string]interface{}
 // init() 函数在 import 的时候立刻被加载
 func init() {
 	ConfigPath := "."
+	Num := 1
 START:
 	// 1. 初始化 Viper 库
 	Viper = viper.New()
@@ -30,7 +31,8 @@ START:
 	// 5. 开始读根目录下的 .env 文件，读不到会报错
 	err := Viper.ReadInConfig()
 	if err != nil {
-		if strings.Contains(err.Error(), "Not Found") {
+		if strings.Contains(err.Error(), "Not Found") && Num < 5 {
+			Num++ // 最多向上找五层目录，找不道就不找了
 			ConfigPath += "../"
 			goto START
 		}
