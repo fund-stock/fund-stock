@@ -89,7 +89,7 @@ func Consume() {
 				go StatisticsEmail(params.From, "success")
 				// 剩余可用条数
 				AvailableNumber := SystemEmailRoutingNode.AvailableNumber - 1
-				err = mysql.DB.Model(models.SystemEmailRoutingNode{}).Where("id", SystemEmailRoutingNode.Id).Update("available_number", AvailableNumber).Error
+				err = mysql.DB.Model(models.GoEmailRouting{}).Where("id", SystemEmailRoutingNode.Id).Update("available_number", AvailableNumber).Error
 				if err != nil {
 					logger.Error(err)
 				}
@@ -128,7 +128,7 @@ func StatisticsEmail(email string, t string) {
 	// 计算成功率
 	if sNum > 0 {
 		successRate := float64(sNum) / float64(tNum)
-		mysql.DB.Debug().Model(models.SystemEmailRoutingNode{}).Where(map[string]interface{}{
+		mysql.DB.Debug().Model(models.GoEmailRouting{}).Where(map[string]interface{}{
 			"email": email,
 		}).Update("rate_success", successRate)
 		redis.Client.ZAdd(fmt.Sprintf("%v:%v:%v", "statistics", SystemEmailSuccessRate, email), goRedis.Z{
@@ -139,7 +139,7 @@ func StatisticsEmail(email string, t string) {
 	// 计算失败率
 	if fNum > 0 {
 		failRate := float64(fNum) / float64(tNum)
-		mysql.DB.Debug().Model(models.SystemEmailRoutingNode{}).Where(map[string]interface{}{
+		mysql.DB.Debug().Model(models.GoEmailRouting{}).Where(map[string]interface{}{
 			"email": email,
 		}).Update("rate_fail", failRate)
 		redis.Client.ZAdd(fmt.Sprintf("%v:%v:%v", "statistics", SystemEmailFailRate, email), goRedis.Z{
@@ -158,7 +158,7 @@ func InitStatisticsEmail(email string) {
 	// 获取总次数
 	_, _ = redis.Client.SelectDbAdd(conf.GetInt("redis.db"), fmt.Sprintf("%v:%v:%v", "statistics", SystemEmailTotal, email), "0", 0)
 	// 成功率
-	mysql.DB.Debug().Model(models.SystemEmailRoutingNode{}).Where(map[string]interface{}{
+	mysql.DB.Debug().Model(models.GoEmailRouting{}).Where(map[string]interface{}{
 		"email": email,
 	}).Update("rate_success", 0)
 	redis.Client.ZAdd(fmt.Sprintf("%v:%v:%v", "statistics", SystemEmailSuccessRate, email), goRedis.Z{
@@ -166,7 +166,7 @@ func InitStatisticsEmail(email string) {
 		Member: email,
 	})
 	// 失败率
-	mysql.DB.Debug().Model(models.SystemEmailRoutingNode{}).Where(map[string]interface{}{
+	mysql.DB.Debug().Model(models.GoEmailRouting{}).Where(map[string]interface{}{
 		"email": email,
 	}).Update("rate_fail", 0)
 	redis.Client.ZAdd(fmt.Sprintf("%v:%v:%v", "statistics", SystemEmailFailRate, email), goRedis.Z{

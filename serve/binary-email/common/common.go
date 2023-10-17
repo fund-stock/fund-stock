@@ -11,7 +11,7 @@ import (
 // 添加操作记录
 
 func CreateSystemEmailSendLog(params requests.SendOneEmail, AvailableNumber int, Status int, ErrMsg string) {
-	var SystemEmailSendLog models.SystemEmailSendLog
+	var SystemEmailSendLog models.GoEmailLog
 	SystemEmailSendLog.SendingMailbox = params.MailAccount
 	SystemEmailSendLog.ReceiveEmail = params.ReceiveEmail
 	SystemEmailSendLog.SendTotal = 1
@@ -23,7 +23,7 @@ func CreateSystemEmailSendLog(params requests.SendOneEmail, AvailableNumber int,
 	SystemEmailSendLog.Status = Status
 	SystemEmailSendLog.Remarks = ErrMsg
 	SystemEmailSendLog.Body = params.MessageContent
-	err := mysql.DB.Model(models.SystemEmailSendLog{}).Create(&SystemEmailSendLog).Error
+	err := mysql.DB.Model(models.GoEmailLog{}).Create(&SystemEmailSendLog).Error
 	if err != nil {
 		logger.Error(err)
 	}
