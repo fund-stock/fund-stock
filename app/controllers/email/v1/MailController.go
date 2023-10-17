@@ -38,7 +38,7 @@ func (h *MailController) QueryMargin(c *gin.Context) {
 	if validate.ParamsError(c, params) {
 		return
 	}
-	mysql.DB.Model(models.SystemEmailRoutingNode{}).Where(map[string]interface{}{
+	mysql.DB.Model(models.GoEmailRouting{}).Where(map[string]interface{}{
 		"valid":  1,
 		"nation": params.Nation,
 		"email":  params.SenderName,
@@ -80,7 +80,7 @@ func (h *MailController) SendOneEmail(c *gin.Context) {
 		return
 	}
 	sendTotalResult := cmap.New().Items()
-	err = mysql.DB.Model(models.SystemEmailSendLog{}).Where(map[string]interface{}{
+	err = mysql.DB.Model(models.GoEmailLog{}).Where(map[string]interface{}{
 		"sending_mailbox": params.MailAccount,
 	}).Select("sum(send_total) AS sendTotal").
 		Find(&sendTotalResult).Error
@@ -120,7 +120,7 @@ func (h *MailController) SendOneEmail(c *gin.Context) {
 	go queue.StatisticsEmail(params.MailAccount, "success")
 	// 剩余可用条数
 	AvailableNumber := SystemEmailRoutingNode.AvailableNumber - 1
-	err = mysql.DB.Model(models.SystemEmailRoutingNode{}).Where("id", SystemEmailRoutingNode.Id).Update("available_number", AvailableNumber).Error
+	err = mysql.DB.Model(models.GoEmailRouting{}).Where("id", SystemEmailRoutingNode.Id).Update("available_number", AvailableNumber).Error
 	if err != nil {
 		logger.Error(err)
 	}
@@ -157,7 +157,7 @@ func (h *MailController) SendBatchEmail(c *gin.Context) {
 		return
 	}
 	sendTotalResult := cmap.New().Items()
-	err = mysql.DB.Model(models.SystemEmailSendLog{}).Where(map[string]interface{}{
+	err = mysql.DB.Model(models.GoEmailLog{}).Where(map[string]interface{}{
 		"sending_mailbox": params.MailAccount,
 	}).Select("sum(send_total) AS sendTotal").
 		Find(&sendTotalResult).Error
@@ -211,7 +211,7 @@ func (h *MailController) SendBatchEmail(c *gin.Context) {
 
 func (h *MailController) ResetMargin(c *gin.Context) {
 	var list []response.SystemEmailRoutingNode
-	mysql.DB.Model(models.SystemEmailRoutingNode{}).Where("valid=1").Find(&list)
+	mysql.DB.Model(models.GoEmailRouting{}).Where("valid=1").Find(&list)
 	for _, item := range list {
 		go queue.InitStatisticsEmail(item.Email)
 	}

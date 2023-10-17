@@ -14,8 +14,6 @@ APP_PPROF: true
 HTTPS: 0
 # 地区限制
 ADDRESS_LIMIT: true
-# 项目编码
-ITEM_CODE: SHARES
 
 
 # 数据库连接信息

@@ -36,8 +36,5 @@ func init() {
 
 		// IP地区限制
 		"address_limit": config.Env("ADDRESS_LIMIT", false),
-
-		// 项目编码
-		"item_code": config.Env("ITEM_CODE", "SMO"),
 	})
 }

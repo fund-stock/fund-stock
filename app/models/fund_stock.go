@@ -57,7 +57,6 @@ type GoAppPassLimitHost struct {
 	UpdateDate    time.Time `gorm:"column:update_date" json:"updateDate"`       // 修改日期
 	Creator       string    `gorm:"column:creator" json:"creator"`              // 添加人ID
 	Updater       string    `gorm:"column:updater" json:"updater"`              // 更新人ID
-	ItemCode      string    `gorm:"column:item_code" json:"itemCode"`           // 关联项目编码
 	IsShow        int       `gorm:"column:is_show" json:"isShow"`               // 是否展示 1是 0否
 	IsDelete      int       `gorm:"column:is_delete" json:"isDelete"`           // 是否删除 1是 0否
 	PassLevel     int       `gorm:"column:pass_level" json:"passLevel"`         // 活跃等级
@@ -78,7 +77,6 @@ var GoAppPassLimitHostColumns = struct {
 	UpdateDate    string
 	Creator       string
 	Updater       string
-	ItemCode      string
 	IsShow        string
 	IsDelete      string
 	PassLevel     string
@@ -91,12 +89,132 @@ var GoAppPassLimitHostColumns = struct {
 	UpdateDate:    "update_date",
 	Creator:       "creator",
 	Updater:       "updater",
-	ItemCode:      "item_code",
 	IsShow:        "is_show",
 	IsDelete:      "is_delete",
 	PassLevel:     "pass_level",
 	ReleaseSource: "release_source",
 	ReleaseModule: "release_module",
+}
+
+// GoEmailLog [...]
+type GoEmailLog struct {
+	ID              int64     `gorm:"primaryKey;column:id" json:"-"`                  // 邮箱发送记录表ID
+	SendingMailbox  string    `gorm:"column:sending_mailbox" json:"sendingMailbox"`   // 发件邮箱账号
+	ReceiveEmail    string    `gorm:"column:receive_email" json:"receiveEmail"`       // 收件箱账号
+	SendTotal       int       `gorm:"column:send_total" json:"sendTotal"`             // 发送数量
+	AvailableNumber int       `gorm:"column:available_number" json:"availableNumber"` // 剩余可用条数
+	Status          int       `gorm:"column:status" json:"status"`                    // 发送状态：1成功 0失败
+	CreatDate       time.Time `gorm:"column:creat_date" json:"creatDate"`             // 创建时间
+	UpdateDate      time.Time `gorm:"column:update_date" json:"updateDate"`           // 修改时间
+	Creator         string    `gorm:"column:creator" json:"creator"`                  // 创建人
+	Updater         string    `gorm:"column:updater" json:"updater"`                  // 修改人
+	Remarks         string    `gorm:"column:remarks" json:"remarks"`                  // 备注
+	Body            string    `gorm:"column:body" json:"body"`                        // 发送内容
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoEmailLog) TableName() string {
+	return "go_email_log"
+}
+
+// GoEmailLogColumns get sql column name.获取数据库列名
+var GoEmailLogColumns = struct {
+	ID              string
+	SendingMailbox  string
+	ReceiveEmail    string
+	SendTotal       string
+	AvailableNumber string
+	Status          string
+	CreatDate       string
+	UpdateDate      string
+	Creator         string
+	Updater         string
+	Remarks         string
+	Body            string
+}{
+	ID:              "id",
+	SendingMailbox:  "sending_mailbox",
+	ReceiveEmail:    "receive_email",
+	SendTotal:       "send_total",
+	AvailableNumber: "available_number",
+	Status:          "status",
+	CreatDate:       "creat_date",
+	UpdateDate:      "update_date",
+	Creator:         "creator",
+	Updater:         "updater",
+	Remarks:         "remarks",
+	Body:            "body",
+}
+
+// GoEmailRouting [...]
+type GoEmailRouting struct {
+	ID              int64     `gorm:"primaryKey;column:id" json:"-"`                  // 邮箱路由节点配置表ID
+	Email           string    `gorm:"column:email" json:"email"`                      // 发信人邮箱
+	Channel         string    `gorm:"column:channel" json:"channel"`                  // 三方渠道
+	ChannelUsername string    `gorm:"column:channel_username" json:"channelUsername"` // 渠道用户名
+	ChannelPassword string    `gorm:"column:channel_password" json:"channelPassword"` // 渠道密码
+	ChannelHost     string    `gorm:"column:channel_host" json:"channelHost"`         // 渠道服务器
+	ChannelPort     int       `gorm:"column:channel_port" json:"channelPort"`         // 渠道端口号
+	AvailableNumber int       `gorm:"column:available_number" json:"availableNumber"` // 剩余可用条数
+	MaxNumber       int       `gorm:"column:max_number" json:"maxNumber"`             // 每日最多使用条数
+	RateSuccess     float64   `gorm:"column:rate_success" json:"rateSuccess"`         // 成功率
+	RateFail        float64   `gorm:"column:rate_fail" json:"rateFail"`               // 失败率
+	Sort            int       `gorm:"column:sort" json:"sort"`                        // 优先排序
+	Valid           int       `gorm:"column:valid" json:"valid"`                      // 有效状态 1有效 0失效
+	CreatDate       time.Time `gorm:"column:creat_date" json:"creatDate"`             // 创建时间
+	UpdateDate      time.Time `gorm:"column:update_date" json:"updateDate"`           // 修改时间
+	Creator         string    `gorm:"column:creator" json:"creator"`                  // 创建人
+	Updater         string    `gorm:"column:updater" json:"updater"`                  // 修改人
+	Remarks         string    `gorm:"column:remarks" json:"remarks"`                  // 备注
+	Type            int       `gorm:"column:type" json:"type"`                        // 类型：1验证码通知，2营销邮件
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoEmailRouting) TableName() string {
+	return "go_email_routing"
+}
+
+// GoEmailRoutingColumns get sql column name.获取数据库列名
+var GoEmailRoutingColumns = struct {
+	ID              string
+	Email           string
+	Channel         string
+	ChannelUsername string
+	ChannelPassword string
+	ChannelHost     string
+	ChannelPort     string
+	AvailableNumber string
+	MaxNumber       string
+	RateSuccess     string
+	RateFail        string
+	Sort            string
+	Valid           string
+	CreatDate       string
+	UpdateDate      string
+	Creator         string
+	Updater         string
+	Remarks         string
+	Type            string
+}{
+	ID:              "id",
+	Email:           "email",
+	Channel:         "channel",
+	ChannelUsername: "channel_username",
+	ChannelPassword: "channel_password",
+	ChannelHost:     "channel_host",
+	ChannelPort:     "channel_port",
+	AvailableNumber: "available_number",
+	MaxNumber:       "max_number",
+	RateSuccess:     "rate_success",
+	RateFail:        "rate_fail",
+	Sort:            "sort",
+	Valid:           "valid",
+	CreatDate:       "creat_date",
+	UpdateDate:      "update_date",
+	Creator:         "creator",
+	Updater:         "updater",
+	Remarks:         "remarks",
+	Type:            "type",
 }
 
 // GoFund [...]
@@ -434,128 +552,4 @@ var GoStockDayColumns = struct {
 	DayAt:    "day_at",
 	CreateAt: "create_at",
 	UpdateAt: "update_at",
-}
-
-// SystemEmailRoutingNode [...]
-type SystemEmailRoutingNode struct {
-	ID              int64     `gorm:"primaryKey;column:id" json:"-"`                  // 邮箱路由节点配置表ID
-	Email           string    `gorm:"column:email" json:"email"`                      // 发信人邮箱
-	Channel         string    `gorm:"column:channel" json:"channel"`                  // 三方渠道
-	ChannelUsername string    `gorm:"column:channel_username" json:"channelUsername"` // 渠道用户名
-	ChannelPassword string    `gorm:"column:channel_password" json:"channelPassword"` // 渠道密码
-	ChannelHost     string    `gorm:"column:channel_host" json:"channelHost"`         // 渠道服务器
-	ChannelPort     int       `gorm:"column:channel_port" json:"channelPort"`         // 渠道端口号
-	AvailableNumber int       `gorm:"column:available_number" json:"availableNumber"` // 剩余可用条数
-	MaxNumber       int       `gorm:"column:max_number" json:"maxNumber"`             // 每日最多使用条数
-	RateSuccess     float64   `gorm:"column:rate_success" json:"rateSuccess"`         // 成功率
-	RateFail        float64   `gorm:"column:rate_fail" json:"rateFail"`               // 失败率
-	Sort            int       `gorm:"column:sort" json:"sort"`                        // 优先排序
-	Valid           int       `gorm:"column:valid" json:"valid"`                      // 有效状态 1有效 0失效
-	CreatDate       time.Time `gorm:"column:creat_date" json:"creatDate"`             // 创建时间
-	UpdateDate      time.Time `gorm:"column:update_date" json:"updateDate"`           // 修改时间
-	Creator         string    `gorm:"column:creator" json:"creator"`                  // 创建人
-	Updater         string    `gorm:"column:updater" json:"updater"`                  // 修改人
-	Remarks         string    `gorm:"column:remarks" json:"remarks"`                  // 备注
-	ItemCode        string    `gorm:"column:item_code" json:"itemCode"`               // 应用编码
-	Type            int       `gorm:"column:type" json:"type"`                        // 类型：1验证码通知，2营销邮件
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *SystemEmailRoutingNode) TableName() string {
-	return "system_email_routing_node"
-}
-
-// SystemEmailRoutingNodeColumns get sql column name.获取数据库列名
-var SystemEmailRoutingNodeColumns = struct {
-	ID              string
-	Email           string
-	Channel         string
-	ChannelUsername string
-	ChannelPassword string
-	ChannelHost     string
-	ChannelPort     string
-	AvailableNumber string
-	MaxNumber       string
-	RateSuccess     string
-	RateFail        string
-	Sort            string
-	Valid           string
-	CreatDate       string
-	UpdateDate      string
-	Creator         string
-	Updater         string
-	Remarks         string
-	ItemCode        string
-	Type            string
-}{
-	ID:              "id",
-	Email:           "email",
-	Channel:         "channel",
-	ChannelUsername: "channel_username",
-	ChannelPassword: "channel_password",
-	ChannelHost:     "channel_host",
-	ChannelPort:     "channel_port",
-	AvailableNumber: "available_number",
-	MaxNumber:       "max_number",
-	RateSuccess:     "rate_success",
-	RateFail:        "rate_fail",
-	Sort:            "sort",
-	Valid:           "valid",
-	CreatDate:       "creat_date",
-	UpdateDate:      "update_date",
-	Creator:         "creator",
-	Updater:         "updater",
-	Remarks:         "remarks",
-	ItemCode:        "item_code",
-	Type:            "type",
-}
-
-// SystemEmailSendLog [...]
-type SystemEmailSendLog struct {
-	ID              int64     `gorm:"primaryKey;column:id" json:"-"`                  // 邮箱发送记录表ID
-	SendingMailbox  string    `gorm:"column:sending_mailbox" json:"sendingMailbox"`   // 发件邮箱账号
-	ReceiveEmail    string    `gorm:"column:receive_email" json:"receiveEmail"`       // 收件箱账号
-	SendTotal       int       `gorm:"column:send_total" json:"sendTotal"`             // 发送数量
-	AvailableNumber int       `gorm:"column:available_number" json:"availableNumber"` // 剩余可用条数
-	Status          int       `gorm:"column:status" json:"status"`                    // 发送状态：1成功 0失败
-	CreatDate       time.Time `gorm:"column:creat_date" json:"creatDate"`             // 创建时间
-	UpdateDate      time.Time `gorm:"column:update_date" json:"updateDate"`           // 修改时间
-	Creator         string    `gorm:"column:creator" json:"creator"`                  // 创建人
-	Updater         string    `gorm:"column:updater" json:"updater"`                  // 修改人
-	Remarks         string    `gorm:"column:remarks" json:"remarks"`                  // 备注
-	Body            string    `gorm:"column:body" json:"body"`                        // 发送内容
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *SystemEmailSendLog) TableName() string {
-	return "system_email_send_log"
-}
-
-// SystemEmailSendLogColumns get sql column name.获取数据库列名
-var SystemEmailSendLogColumns = struct {
-	ID              string
-	SendingMailbox  string
-	ReceiveEmail    string
-	SendTotal       string
-	AvailableNumber string
-	Status          string
-	CreatDate       string
-	UpdateDate      string
-	Creator         string
-	Updater         string
-	Remarks         string
-	Body            string
-}{
-	ID:              "id",
-	SendingMailbox:  "sending_mailbox",
-	ReceiveEmail:    "receive_email",
-	SendTotal:       "send_total",
-	AvailableNumber: "available_number",
-	Status:          "status",
-	CreatDate:       "creat_date",
-	UpdateDate:      "update_date",
-	Creator:         "creator",
-	Updater:         "updater",
-	Remarks:         "remarks",
-	Body:            "body",
 }

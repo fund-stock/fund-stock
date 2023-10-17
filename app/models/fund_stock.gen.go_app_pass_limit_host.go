@@ -90,11 +90,6 @@ func (obj *_GoAppPassLimitHostMgr) WithUpdater(updater string) Option {
 	return optionFunc(func(o *options) { o.query["updater"] = updater })
 }
 
-// WithItemCode item_code获取 关联项目编码
-func (obj *_GoAppPassLimitHostMgr) WithItemCode(itemCode string) Option {
-	return optionFunc(func(o *options) { o.query["item_code"] = itemCode })
-}
-
 // WithIsShow is_show获取 是否展示 1是 0否
 func (obj *_GoAppPassLimitHostMgr) WithIsShow(isShow int) Option {
 	return optionFunc(func(o *options) { o.query["is_show"] = isShow })
@@ -253,20 +248,6 @@ func (obj *_GoAppPassLimitHostMgr) GetFromUpdater(updater string) (results []*Go
 // GetBatchFromUpdater 批量查找 更新人ID
 func (obj *_GoAppPassLimitHostMgr) GetBatchFromUpdater(updaters []string) (results []*GoAppPassLimitHost, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(GoAppPassLimitHost{}).Where("`updater` IN (?)", updaters).Find(&results).Error
-
-	return
-}
-
-// GetFromItemCode 通过item_code获取内容 关联项目编码
-func (obj *_GoAppPassLimitHostMgr) GetFromItemCode(itemCode string) (results []*GoAppPassLimitHost, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoAppPassLimitHost{}).Where("`item_code` = ?", itemCode).Find(&results).Error
-
-	return
-}
-
-// GetBatchFromItemCode 批量查找 关联项目编码
-func (obj *_GoAppPassLimitHostMgr) GetBatchFromItemCode(itemCodes []string) (results []*GoAppPassLimitHost, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoAppPassLimitHost{}).Where("`item_code` IN (?)", itemCodes).Find(&results).Error
 
 	return
 }
