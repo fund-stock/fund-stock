@@ -64,11 +64,6 @@ func (obj *_GoStockMgr) WithID(id int64) Option {
 	return optionFunc(func(o *options) { o.query["id"] = id })
 }
 
-// WithProductID product_id获取 产品id
-func (obj *_GoStockMgr) WithProductID(productID string) Option {
-	return optionFunc(func(o *options) { o.query["product_id"] = productID })
-}
-
 // WithCode code获取 代码
 func (obj *_GoStockMgr) WithCode(code string) Option {
 	return optionFunc(func(o *options) { o.query["code"] = code })
@@ -167,20 +162,6 @@ func (obj *_GoStockMgr) GetFromID(id int64) (result GoStock, err error) {
 // GetBatchFromID 批量查找
 func (obj *_GoStockMgr) GetBatchFromID(ids []int64) (results []*GoStock, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(GoStock{}).Where("`id` IN (?)", ids).Find(&results).Error
-
-	return
-}
-
-// GetFromProductID 通过product_id获取内容 产品id
-func (obj *_GoStockMgr) GetFromProductID(productID string) (results []*GoStock, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoStock{}).Where("`product_id` = ?", productID).Find(&results).Error
-
-	return
-}
-
-// GetBatchFromProductID 批量查找 产品id
-func (obj *_GoStockMgr) GetBatchFromProductID(productIDs []string) (results []*GoStock, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoStock{}).Where("`product_id` IN (?)", productIDs).Find(&results).Error
 
 	return
 }

@@ -359,15 +359,14 @@ var GoRoutesColumns = struct {
 
 // GoStock [...]
 type GoStock struct {
-	ID        int64   `gorm:"primaryKey;column:id" json:"-"`
-	ProductID string  `gorm:"column:product_id" json:"productId"` // 产品id
-	Code      string  `gorm:"column:code" json:"code"`            // 代码
-	Name      string  `gorm:"column:name" json:"name"`            // 名称
-	Amount    float64 `gorm:"column:amount" json:"amount"`        // 金额
-	Nav       float64 `gorm:"column:nav" json:"nav"`              // 最新净值
-	Status    int     `gorm:"column:status" json:"status"`        // 状态：0-未启用，1-已启用
-	CreateAt  int64   `gorm:"column:create_at" json:"createAt"`   // 创建时间
-	UpdateAt  int64   `gorm:"column:update_at" json:"updateAt"`   // 更新时间
+	ID       int64   `gorm:"primaryKey;column:id" json:"-"`
+	Code     string  `gorm:"column:code" json:"code"`          // 代码
+	Name     string  `gorm:"column:name" json:"name"`          // 名称
+	Amount   float64 `gorm:"column:amount" json:"amount"`      // 金额
+	Nav      float64 `gorm:"column:nav" json:"nav"`            // 最新净值
+	Status   int     `gorm:"column:status" json:"status"`      // 状态：0-未启用，1-已启用
+	CreateAt int64   `gorm:"column:create_at" json:"createAt"` // 创建时间
+	UpdateAt int64   `gorm:"column:update_at" json:"updateAt"` // 更新时间
 }
 
 // TableName get sql table name.获取数据库表名
@@ -377,25 +376,23 @@ func (m *GoStock) TableName() string {
 
 // GoStockColumns get sql column name.获取数据库列名
 var GoStockColumns = struct {
-	ID        string
-	ProductID string
-	Code      string
-	Name      string
-	Amount    string
-	Nav       string
-	Status    string
-	CreateAt  string
-	UpdateAt  string
+	ID       string
+	Code     string
+	Name     string
+	Amount   string
+	Nav      string
+	Status   string
+	CreateAt string
+	UpdateAt string
 }{
-	ID:        "id",
-	ProductID: "product_id",
-	Code:      "code",
-	Name:      "name",
-	Amount:    "amount",
-	Nav:       "nav",
-	Status:    "status",
-	CreateAt:  "create_at",
-	UpdateAt:  "update_at",
+	ID:       "id",
+	Code:     "code",
+	Name:     "name",
+	Amount:   "amount",
+	Nav:      "nav",
+	Status:   "status",
+	CreateAt: "create_at",
+	UpdateAt: "update_at",
 }
 
 // GoStockDay [...]
