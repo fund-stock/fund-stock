@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  xw-client:
+  xw-timer:
     image: iszmxw/timer:latest
     container_name: xw-timer
     restart: always

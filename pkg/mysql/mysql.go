@@ -29,7 +29,6 @@ func ConnectDB() *gorm.DB {
 		charset  = config.GetString("database.mysql.charset")
 	)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%t&loc=%s", username, password, host, port, database, charset, true, "Local")
-
 	gormConfig := mysql.New(mysql.Config{
 		DSN: dsn,
 	})
@@ -45,14 +44,14 @@ func ConnectDB() *gorm.DB {
 		Logger: logger,
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Println("数据库链接失败", dsn, err.Error())
 	}
 	err = DB.Callback().Query().Before("gorm:query").Register("disable_raise_record_not_found", func(d *gorm.DB) {
 		// 在未找到时引发错误
 		d.Statement.RaiseErrorOnNotFound = false
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Println("数据库 disable_raise_record_not_found 失败", dsn, err.Error())
 	}
 	return DB
 }
