@@ -109,6 +109,31 @@
 - [x] `2023-09-25` 添加 `bark` 通知功能
 - [x] `2023-09-26` 添加 `实时数据获取`
 
+## 打包编译
+
+- 打包docker镜像
+
+```shell
+# timer 服务
+docker build -t timer -f serve/binary-timer/timer.dockerfile .
+```
+
+
+
+- 上传 docker 镜像
+
+```shell
+# timer 镜像
+docker tag timer iszmxw/timer:latest
+docker push iszmxw/timer:latest
+```
+
+- 上传 docker 镜像
+
+```shell
+# 运行 timer 镜像
+docker run -e=CONFIG_FILE=./config -v=/home/yezhiming/binary/timer:/home/yezhiming/binary/timer/config -p 7104:7104 --name=xw-timer --network="host" -d iszmxw/timer:latest
+```
 
 # TODO
 - [ ] 分时任务

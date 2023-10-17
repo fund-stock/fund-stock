@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"goapi/pkg/logger"
+	"os"
 	"strings"
 )
 
@@ -26,8 +27,12 @@ START:
 	//             "props", "prop", "env", "dotenv"
 	Viper.SetConfigType("yaml")
 	// 4. 环境变量配置文件查找的路径，相对于 main.go
-	Viper.AddConfigPath(ConfigPath)
-
+	configFile := os.Getenv("CONFIG_FILE")
+	if configFile == "" {
+		Viper.AddConfigPath(ConfigPath)
+	} else {
+		Viper.AddConfigPath(configFile)
+	}
 	// 5. 开始读根目录下的 .env 文件，读不到会报错
 	err := Viper.ReadInConfig()
 	if err != nil {

@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  xw-client:
+    image: iszmxw/timer:latest
+    container_name: xw-timer
+    restart: always
+    environment:
+      CONFIG_FILE: ./config
+    volumes:
+      - /home/yezhiming/binary/timer:/home/yezhiming/binary/timer/config
+      - /home/yezhiming/binary/logs:/home/yezhiming/binary/timer/logs
+    network_mode: "host"
