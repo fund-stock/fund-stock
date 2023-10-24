@@ -31,6 +31,9 @@ func Analyze(Stock *models.GoStock) {
 		logger.Error(err)
 		return
 	}
+	if len(minute.List) <= 0 {
+		return
+	}
 	for _, item := range minute.List {
 		// ToDo 分析数据
 		fmt.Println(item)

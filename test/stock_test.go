@@ -35,9 +35,10 @@ func TestGetHistoryData(t *testing.T) {
 	fmt.Println("测试")
 	//client.GetHistoryData("sz002194")
 	//client.GetHistoryData("sz002261")
-	code := "sz002528"
-	code = "sz002261"
-	AnalyzeMarket(code)
+	//code := "sz002528"
+	//code = "sz002261"
+	//AnalyzeMarket(code)
+	client.StockList()
 	time.Sleep(time.Second * 60)
 }
 

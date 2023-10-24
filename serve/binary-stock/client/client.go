@@ -2,13 +2,18 @@ package client
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"goapi/app/models"
 	"goapi/pkg/helpers"
 	"goapi/pkg/logger"
+	"goapi/pkg/mysql"
+	"goapi/serve/binary-stock/response/k780"
 	"goapi/serve/binary-stock/response/qtimg"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // 获取分时原始数据
@@ -20,6 +25,7 @@ func GetMinute(code string) (*qtimg.Minute, error) {
 	var info qtimg.MinuteWWW
 	err := json.Unmarshal([]byte(out), &info)
 	if err != nil {
+		logger.Error(err)
 		return nil, err
 	}
 	var sumPrice float64
@@ -32,7 +38,7 @@ func GetMinute(code string) (*qtimg.Minute, error) {
 		// index := len(info.Data.Info.Data.Data) - 1
 		for _, v := range info.Data.Info.Data.Data {
 			out := strings.Split(v, " ")
-			if len(out) == 4 {
+			if len(out) >= 3 {
 				minfo := qtimg.MinuteInfo{
 					Time:  out[0],
 					Price: helpers.StrToFloat64(out[1]),
@@ -47,6 +53,8 @@ func GetMinute(code string) (*qtimg.Minute, error) {
 				tmp.List = append(tmp.List, minfo)
 			}
 		}
+	} else {
+		return nil, errors.New(fmt.Sprintf("%v", info.Code))
 	}
 	return &tmp, nil
 }
@@ -84,4 +92,72 @@ func GetHistoryData(code string) qtimg.Resp {
 		return Resp
 	}
 	return Resp
+}
+
+func StockList() {
+	urls := "https://sapi.k780.com/?app=finance.stock_list&category=hs&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json"
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", urls, nil)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	req.Header.Add("Accept-Language", "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7")
+	req.Header.Add("Cache-Control", "no-cache")
+	req.Header.Add("Connection", "keep-alive")
+	req.Header.Add("Pragma", "no-cache")
+	req.Header.Add("Sec-Fetch-Dest", "document")
+	req.Header.Add("Sec-Fetch-Mode", "navigate")
+	req.Header.Add("Sec-Fetch-Site", "none")
+	req.Header.Add("Sec-Fetch-User", "?1")
+	req.Header.Add("Upgrade-Insecure-Requests", "1")
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36")
+	req.Header.Add("sec-ch-ua", "\"Chromium\";v=\"118\", \"Google Chrome\";v=\"118\", \"Not=A?Brand\";v=\"99\"")
+	req.Header.Add("sec-ch-ua-mobile", "?0")
+	req.Header.Add("sec-ch-ua-platform", "\"macOS\"")
+	req.Header.Add("Host", "sapi.k780.com")
+	res, err := client.Do(req)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	var Resp k780.List
+	err = json.Unmarshal(body, &Resp)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	if Resp.Success != "1" {
+		logger.Info(Resp.Success)
+		return
+	}
+	DB := models.GoStockMgr(mysql.DB)
+	for _, item := range Resp.Result.Lists {
+		option, err := DB.GetByOption(DB.WithStatus(1), DB.WithCode(item.Symbol))
+		if err != nil {
+			logger.Error(err)
+			return
+		}
+		if option.ID > 0 {
+			continue
+		}
+		DB.Debug().Create(&models.GoStock{
+			Code:     item.Symbol,
+			Name:     item.Sname,
+			Amount:   100.00,
+			Nav:      0,
+			Status:   1,
+			CreateAt: time.Now().UnixMilli(),
+			UpdateAt: time.Now().UnixMilli(),
+		})
+	}
+	fmt.Println("Success")
+
 }
