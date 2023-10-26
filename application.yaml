@@ -18,7 +18,7 @@ ADDRESS_LIMIT: true
 
 # 数据库连接信息
 DB_CONNECTION: mysql
-DB_HOST: 192.168.29.5
+DB_HOST: 127.0.0.1
 # 端口
 DB_PORT: 3306
 # 表名
@@ -36,7 +36,7 @@ DB_MAX_OPEN_CONNECTIONS: 100
 
 
 # redis配置
-REDIS_HOST: 192.168.29.5
+REDIS_HOST: 127.0.0.1
 # 没有密码，默认留空
 REDIS_PASSWORD:
 # 端口号
