@@ -13,7 +13,7 @@ services:
       - "3306:3306"
   xw-redis:
     image: iszmxw/redis:v6.2.5
-    container_name: xw-mysql
+    container_name: xw-redis
     volumes:
       - /home/codespace/yezhiming/redis:/data
     ports:
@@ -25,6 +25,6 @@ services:
     environment:
       CONFIG_FILE: ./config
     volumes:
-      - /home/codespace/yezhiming/binary/timer:/home/yezhiming/binary/timer/config
-      - /home/codespace/yezhiming/binary/logs:/home/yezhiming/binary/timer/logs
+      - /home/yezhiming/binary/timer:/home/yezhiming/binary/timer/config
+      - /home/yezhiming/binary/logs:/home/yezhiming/binary/timer/logs
     network_mode: "host"
