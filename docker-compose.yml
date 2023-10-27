@@ -8,14 +8,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 123456_master
     volumes:
-      - /home/codespaces/mysql:/var/lib/mysql
+      - /home/codespace/yezhiming/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
   xw-redis:
     image: iszmxw/redis:v6.2.5
     container_name: xw-mysql
     volumes:
-      - /home/codespaces/redis:/data
+      - /home/codespace/yezhiming/redis:/data
     ports:
       - "6379:6379"
   xw-timer:
@@ -25,6 +25,6 @@ services:
     environment:
       CONFIG_FILE: ./config
     volumes:
-      - /home/yezhiming/binary/timer:/home/yezhiming/binary/timer/config
-      - /home/yezhiming/binary/logs:/home/yezhiming/binary/timer/logs
+      - /home/codespace/yezhiming/binary/timer:/home/yezhiming/binary/timer/config
+      - /home/codespace/yezhiming/binary/logs:/home/yezhiming/binary/timer/logs
     network_mode: "host"
