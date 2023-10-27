@@ -1,6 +1,23 @@
 version: '3'
 
 services:
+  xw-mysql:
+    image: iszmxw/mysql:5.7
+    container_name: xw-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456_master
+    volumes:
+      - /home/codespaces/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  xw-redis:
+    image: iszmxw/redis:v6.2.5
+    container_name: xw-mysql
+    volumes:
+      - /home/codespaces/redis:/data
+    ports:
+      - "6379:6379"
   xw-timer:
     image: iszmxw/timer:latest
     container_name: xw-timer
