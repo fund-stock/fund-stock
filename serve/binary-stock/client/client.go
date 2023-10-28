@@ -63,30 +63,10 @@ func GetMinute(code string) (*qtimg.Minute, error) {
 
 func GetHistoryData(code string) qtimg.Resp {
 	var Resp qtimg.Resp
-	url := fmt.Sprintf("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=%v,day,,,320,qfq", code)
-	method := "GET"
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		logger.Error(err)
-		return Resp
-	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "*/*")
-	res, err := client.Do(req)
-	if err != nil {
-		logger.Error(err)
-		return Resp
-	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		logger.Error(err)
-		return Resp
-	}
-	str := strings.ReplaceAll(string(body), code, "info")
-	str = strings.ReplaceAll(str, "qfqday", "day")
-	err = json.Unmarshal([]byte(str), &Resp)
+	out := SendGet(fmt.Sprintf("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=%v,day,,,320,qfq", code), "")
+	out = strings.ReplaceAll(out, code, "info")
+	out = strings.ReplaceAll(out, "qfqday", "day")
+	err := json.Unmarshal([]byte(out), &Resp)
 	if err != nil {
 		logger.Error(err)
 		return Resp
