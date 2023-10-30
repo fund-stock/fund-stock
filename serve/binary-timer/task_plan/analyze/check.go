@@ -4,14 +4,28 @@ import (
 	"fmt"
 	"github.com/shopspring/decimal"
 	"goapi/app/models"
+	"goapi/pkg/logger"
+	"goapi/pkg/mysql"
 	"goapi/pkg/notice"
+	"goapi/serve/binary-stock/client"
 	"goapi/serve/binary-timer/template"
 )
 
-func MonitorExpectedPrice(currentPrice float64, Stock *models.GoStock) {
+func MonitorExpectedPrice(Stock *client.SharesInfoDetails) {
+	// 最新的价位
+	currentPrice := Stock.Price
+	DB := models.GoStockMgr(mysql.DB)
+	DbStock, err := DB.Debug().GetByOption(DB.WithStatus(1), DB.WithCode(Stock.Code))
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	if DbStock.Nav <= 0 {
+		return
+	}
 	// 股价降到心里预期价位，赶快预警
 	if decimal.NewFromFloat(currentPrice).
-		Sub(decimal.NewFromFloat(Stock.Nav)).
+		Sub(decimal.NewFromFloat(DbStock.Nav)).
 		GreaterThan(decimal.NewFromFloat(0)) {
 		return
 	}
@@ -20,7 +34,11 @@ func MonitorExpectedPrice(currentPrice float64, Stock *models.GoStock) {
 
 // 监控涨跌幅变化
 
-func MonitorPercentageChange(currentPrice, PrePrice float64, Stock *models.GoStock) {
+func MonitorPercentageChange(Stock *client.SharesInfoDetails) {
+	// 最新的价位
+	currentPrice := Stock.Price
+	// 昨日收盘价
+	PrePrice := Stock.YesterdayClosePrice
 	// 差价
 	diffPrice, _ := decimal.NewFromFloat(currentPrice).Sub(decimal.NewFromFloat(PrePrice)).Float64()
 	if diffPrice == 0 {

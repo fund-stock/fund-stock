@@ -69,29 +69,30 @@ func Searches(codes []string) (resp []*SharesInfo) {
 
 // SharesInfoDetails 股票详细信息
 type SharesInfoDetails struct {
-	Code         string  `protobuf:"bytes,1,opt,name=code,proto3" json:"code"`                    // 股票代码
-	SimpleCode   string  `protobuf:"bytes,2,opt,name=simpleCode,proto3" json:"simpleCode"`        // 股票代码简写
-	Ext          string  `protobuf:"bytes,3,opt,name=ext,proto3" json:"ext"`                      // 后缀
-	Name         string  `protobuf:"bytes,4,opt,name=name,proto3" json:"name"`                    // 股票名字
-	Price        float64 `protobuf:"fixed64,5,opt,name=price,proto3" json:"price"`                // 当前价格
-	Percent      float64 `protobuf:"fixed64,6,opt,name=percent,proto3" json:"percent"`            // 百分比
-	Color        string  `protobuf:"bytes,7,opt,name=color,proto3" json:"color"`                  // 颜色
-	Img          string  `protobuf:"bytes,8,opt,name=img,proto3" json:"img"`                      // 图片地址
-	Volume       float64 `protobuf:"fixed64,9,opt,name=volume,proto3" json:"volume"`              // 成交量（手）
-	Turnover     float64 `protobuf:"fixed64,10,opt,name=turnover,proto3" json:"turnover"`         // 成交额（万）
-	TurnoverRate float64 `protobuf:"fixed64,11,opt,name=turnoverRate,proto3" json:"turnoverRate"` // 换手率
-	Pe           float64 `protobuf:"fixed64,12,opt,name=pe,proto3" json:"pe"`                     // 市盈率
-	Pb           float64 `protobuf:"fixed64,13,opt,name=pb,proto3" json:"pb"`                     // 市净率
-	Total        float64 `protobuf:"fixed64,15,opt,name=total,proto3" json:"total"`               // 流通市值
-	Cap          float64 `protobuf:"fixed64,16,opt,name=cap,proto3" json:"cap"`                   // 总市值
-	Zljlr        float64 `protobuf:"fixed64,17,opt,name=zljlr,proto3" json:"zljlr"`               // 主力资金净流入
-	OpenPrice    float64 `protobuf:"fixed64,18,opt,name=openPrice,proto3" json:"openPrice"`       // 开盘价
-	ClosePrice   float64 `protobuf:"fixed64,19,opt,name=closePrice,proto3" json:"closePrice"`     // 收盘价
-	Macd         float64 `protobuf:"fixed64,20,opt,name=macd,proto3" json:"macd"`                 // macd
-	Dif          float64 `protobuf:"fixed64,21,opt,name=dif,proto3" json:"dif"`                   // 快线
-	Dea          float64 `protobuf:"fixed64,22,opt,name=dea,proto3" json:"dea"`                   // 慢线
-	Max          float64 `protobuf:"fixed64,23,opt,name=max,proto3" json:"max"`                   // 当日最高点
-	Min          float64 `protobuf:"fixed64,24,opt,name=min,proto3" json:"min"`                   // 当日最低
+	Code                string  `protobuf:"bytes,1,opt,name=code,proto3" json:"code"`                                  // 股票代码
+	SimpleCode          string  `protobuf:"bytes,2,opt,name=simpleCode,proto3" json:"simpleCode"`                      // 股票代码简写
+	Ext                 string  `protobuf:"bytes,3,opt,name=ext,proto3" json:"ext"`                                    // 后缀
+	Name                string  `protobuf:"bytes,4,opt,name=name,proto3" json:"name"`                                  // 股票名字
+	Price               float64 `protobuf:"fixed64,5,opt,name=price,proto3" json:"price"`                              // 当前价格
+	Percent             float64 `protobuf:"fixed64,6,opt,name=percent,proto3" json:"percent"`                          // 百分比
+	Color               string  `protobuf:"bytes,7,opt,name=color,proto3" json:"color"`                                // 颜色
+	Img                 string  `protobuf:"bytes,8,opt,name=img,proto3" json:"img"`                                    // 图片地址
+	Volume              float64 `protobuf:"fixed64,9,opt,name=volume,proto3" json:"volume"`                            // 成交量（手）
+	Turnover            float64 `protobuf:"fixed64,10,opt,name=turnover,proto3" json:"turnover"`                       // 成交额（万）
+	TurnoverRate        float64 `protobuf:"fixed64,11,opt,name=turnoverRate,proto3" json:"turnoverRate"`               // 换手率
+	Pe                  float64 `protobuf:"fixed64,12,opt,name=pe,proto3" json:"pe"`                                   // 市盈率
+	Pb                  float64 `protobuf:"fixed64,13,opt,name=pb,proto3" json:"pb"`                                   // 市净率
+	Total               float64 `protobuf:"fixed64,15,opt,name=total,proto3" json:"total"`                             // 流通市值
+	Cap                 float64 `protobuf:"fixed64,16,opt,name=cap,proto3" json:"cap"`                                 // 总市值
+	Zljlr               float64 `protobuf:"fixed64,17,opt,name=zljlr,proto3" json:"zljlr"`                             // 主力资金净流入
+	OpenPrice           float64 `protobuf:"fixed64,18,opt,name=openPrice,proto3" json:"openPrice"`                     // 开盘价
+	ClosePrice          float64 `protobuf:"fixed64,19,opt,name=closePrice,proto3" json:"closePrice"`                   // 收盘价
+	YesterdayClosePrice float64 `protobuf:"fixed64,19,opt,name=yesterdayClosePrice,proto3" json:"yesterdayClosePrice"` // 昨日收盘价
+	Macd                float64 `protobuf:"fixed64,20,opt,name=macd,proto3" json:"macd"`                               // macd
+	Dif                 float64 `protobuf:"fixed64,21,opt,name=dif,proto3" json:"dif"`                                 // 快线
+	Dea                 float64 `protobuf:"fixed64,22,opt,name=dea,proto3" json:"dea"`                                 // 慢线
+	Max                 float64 `protobuf:"fixed64,23,opt,name=max,proto3" json:"max"`                                 // 当日最高点
+	Min                 float64 `protobuf:"fixed64,24,opt,name=min,proto3" json:"min"`                                 // 当日最低
 }
 
 func SplitCode(code string) (ext, simplecode string) {
@@ -178,6 +179,7 @@ func SearchDetails(codes []string) (resp []*SharesInfoDetails) {
 					tmp.Price = helpers.StrToFloat64(list2[3])
 					tmp.OpenPrice = helpers.StrToFloat64(list2[5])
 					tmp.ClosePrice = tmp.Price
+					tmp.YesterdayClosePrice = helpers.StrToFloat64(list2[4])
 					tmp.Percent = helpers.StrToFloat64(list2[32])
 					tmp.Volume = helpers.StrToFloat64(list2[36])
 					tmp.Turnover = helpers.StrToFloat64(list2[37])
@@ -189,19 +191,19 @@ func SearchDetails(codes []string) (resp []*SharesInfoDetails) {
 					tmp.Total = helpers.StrToFloat64(list2[44])
 					tmp.Cap = helpers.StrToFloat64(list2[45])
 				}
-				// 主力资金
-				_tmp := getDayZLJLR(SplitCode(tmp.Code))
-				if _tmp != nil {
-					tmp.Zljlr = _tmp.Price
-				}
+				// 主力资金 todo
+				//_tmp := getDayZLJLR(SplitCode(tmp.Code))
+				//if _tmp != nil {
+				//	tmp.Zljlr = _tmp.Price
+				//}
 				// -----
-				// macd
-				_tmp1 := GetDayMACD(tmp.Code)
-				if _tmp1 != nil {
-					tmp.Macd = _tmp1.Macd
-					tmp.Dif = _tmp1.Dif
-					tmp.Dea = _tmp1.Dea
-				}
+				//// macd todo
+				//_tmp1 := GetDayMACD(tmp.Code)
+				//if _tmp1 != nil {
+				//	tmp.Macd = _tmp1.Macd
+				//	tmp.Dif = _tmp1.Dif
+				//	tmp.Dea = _tmp1.Dea
+				//}
 				//
 				resp = append(resp, tmp)
 			}

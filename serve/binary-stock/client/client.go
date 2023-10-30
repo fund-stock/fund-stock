@@ -120,6 +120,10 @@ func StockList() {
 	}
 	DB := models.GoStockMgr(mysql.DB)
 	for _, item := range Resp.Result.Lists {
+		if strings.Contains(item.Symbol, "bj") {
+			// 北交所暂时不需要
+			continue
+		}
 		option, err := DB.GetByOption(DB.WithStatus(1), DB.WithCode(item.Symbol))
 		if err != nil {
 			logger.Error(err)
