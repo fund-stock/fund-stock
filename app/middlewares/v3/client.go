@@ -20,7 +20,7 @@ func AddressLimit() gin.HandlerFunc {
 	/** 您所在的地区限制使用 */
 	return func(c *gin.Context) {
 		logger.Info(c.ClientIP())
-		if c.FullPath() == "/app/v3/config/setKlineToken.json" {
+		if c.FullPath() == "/app/v3/wechat/init.json" {
 			c.Next()
 		} else {
 			// 正式环境检测
@@ -47,11 +47,7 @@ func Client() gin.HandlerFunc {
 		SetLang(c, "en")
 		path := c.FullPath()
 		switch path {
-		case "/app/v3/agent/register.json":
-		case "/app/v3/agent/statistics.json":
-		case "/app/v3/config/setKlineToken.json":
-		case "/app/v3/config/checkLanguage.json":
-		case "/app/v3/notice/siteLetterNotification.json":
+		case "/app/v3/wechat/init.json":
 			// 继续往下面执行
 			c.Next()
 			break

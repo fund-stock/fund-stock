@@ -6,4 +6,5 @@ type BaseController struct {
 type Group struct {
 	BaseController
 	ConfigController
+	WechatController
 }

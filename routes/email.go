@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	clientV1 "goapi/app/controllers/email/v1"
-	middlewares "goapi/app/middlewares/v1"
+	middlewares "goapi/app/middlewares/v3"
 )
 
 // RegisterEmailRoutes 注册 Email 路由

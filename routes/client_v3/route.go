@@ -26,6 +26,12 @@ func RegisterClientRoutes(router *gin.RouterGroup) {
 				// 检查多语言是否包含中文，然后发送警告
 				config.POST("/checkLanguage.json", ClientV3Group.ConfigController.CheckLanguage)
 			}
+
+			// 微信接口
+			wechat := V3Route.Group("/wechat")
+			{
+				wechat.Any("/init.json", ClientV3Group.WechatController.ServeWechat)
+			}
 		}
 
 	}

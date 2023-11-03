@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	WebCtl "goapi/app/controllers/web/v1"
-	WebMw "goapi/app/middlewares/v1"
+	WebMw "goapi/app/middlewares/v3"
 )
 
 var WebV1Group = new(WebCtl.Group)

@@ -5,8 +5,6 @@ import (
 	"goapi/app/middlewares/common"
 	"goapi/pkg/redis"
 	"goapi/routes"
-	"goapi/routes/client_v1"
-	"goapi/routes/client_v2"
 	"goapi/routes/client_v3"
 	"net/http"
 	"os/exec"
@@ -40,9 +38,7 @@ func SetupRoute() *gin.Engine {
 		}
 		c.String(200, string(output))
 	})
-	// 二元 client 接口
-	client_v1.RegisterClientRoutes(router.Group("/"))
-	client_v2.RegisterClientRoutes(router.Group("/"))
+	// client 接口
 	client_v3.RegisterClientRoutes(router.Group("/"))
 	return router
 }
