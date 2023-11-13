@@ -115,7 +115,7 @@
 
 ```shell
 # timer 服务
-docker build -t timer -f serve/binary-timer/timer.dockerfile .
+docker build -t fund-stock-timer -f serve/binary-timer/timer.dockerfile .
 ```
 
 
@@ -124,8 +124,8 @@ docker build -t timer -f serve/binary-timer/timer.dockerfile .
 
 ```shell
 # timer 镜像
-docker tag timer iszmxw/timer:latest
-docker push iszmxw/timer:latest
+docker tag fund-stock-timer iszmxw/fund-stock-timer:latest
+docker push iszmxw/fund-stock-timer:latest
 ```
 
 - 上传 docker 镜像
