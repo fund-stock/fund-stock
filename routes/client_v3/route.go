@@ -31,6 +31,7 @@ func RegisterClientRoutes(router *gin.RouterGroup) {
 			wechat := V3Route.Group("/wechat")
 			{
 				wechat.Any("/init.json", ClientV3Group.WechatController.ServeWechat)
+				wechat.Any("/userSynchronize.json", ClientV3Group.WechatController.Synchronize)
 			}
 		}
 

@@ -2,12 +2,19 @@ package v3
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"goapi/app/response"
 	"goapi/pkg/logger"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 // 微信服务
@@ -54,5 +61,44 @@ func (h *WechatController) ServeWechat(c *gin.Context) {
 	if err != nil {
 		logger.Error(err)
 		return
+	}
+}
+
+func (h *WechatController) Synchronize(c *gin.Context) {
+	url := "http://106.52.198.173:8000/contact/get_contacts"
+	method := "POST"
+	payload := strings.NewReader(`{"guid": "f9670e78-26c9-3bb7-885d-bc3f760aff6d"}`)
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+
+	var wxResp response.RespWx
+	err = json.Unmarshal(body, &wxResp)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	if wxResp.Status != 1 {
+		logger.Error(errors.New(wxResp.Msg))
+		return
+	}
+	for _, data := range wxResp.Data {
+		fmt.Println(data)
 	}
 }

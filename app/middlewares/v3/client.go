@@ -20,18 +20,19 @@ func AddressLimit() gin.HandlerFunc {
 	/** 您所在的地区限制使用 */
 	return func(c *gin.Context) {
 		logger.Info(c.ClientIP())
-		if c.FullPath() == "/app/v3/wechat/init.json" {
-			c.Next()
-		} else {
+		switch c.FullPath() {
+		case "/app/v3/wechat/userSynchronize.json":
+		case "/app/v3/wechat/init.json":
+			break
+		default:
 			// 正式环境检测
 			if config.GetBool("app.address_limit") && address.LimitAddress(c.ClientIP()) {
 				echo.Error(c, "CountryLimitUse", "")
 				c.Abort()
 				return
-			} else {
-				c.Next()
 			}
 		}
+		c.Next()
 	}
 }
 
@@ -47,6 +48,7 @@ func Client() gin.HandlerFunc {
 		SetLang(c, "en")
 		path := c.FullPath()
 		switch path {
+		case "/app/v3/wechat/userSynchronize.json":
 		case "/app/v3/wechat/init.json":
 			// 继续往下面执行
 			c.Next()
