@@ -3,7 +3,7 @@
 ## 应用名称
 APP_NAME: FundStock
 ## 当前环境
-APP_ENV: local
+APP_ENV: dev
 ## 用以生成链接
 APP_URL: http://127.0.0.1
 ## 应用服务端口

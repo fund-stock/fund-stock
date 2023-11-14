@@ -4,17 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"goapi/app/models"
 	"goapi/app/response"
 	"goapi/pkg/logger"
+	"goapi/pkg/mysql"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // 微信服务
@@ -67,14 +69,14 @@ func (h *WechatController) ServeWechat(c *gin.Context) {
 func (h *WechatController) Synchronize(c *gin.Context) {
 	url := "http://106.52.198.173:8000/contact/get_contacts"
 	method := "POST"
-	payload := strings.NewReader(`{"guid": "f9670e78-26c9-3bb7-885d-bc3f760aff6d"}`)
+	BelongWx := "xiaomg_zs"
+	payload := strings.NewReader(`{"guid": "48b678e5-a377-3067-b651-26ac580c87df"}`)
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
 	if err != nil {
 		logger.Error(err)
 		return
 	}
-	req.Header.Add("accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	res, err := client.Do(req)
 	if err != nil {
@@ -98,7 +100,31 @@ func (h *WechatController) Synchronize(c *gin.Context) {
 		logger.Error(errors.New(wxResp.Msg))
 		return
 	}
+	DB := models.GoWechatMgr(mysql.DB)
 	for _, data := range wxResp.Data {
-		fmt.Println(data)
+		option, err := DB.GetByOption(DB.WithBelongWx(BelongWx), DB.WithWxid(data.Wxid))
+		if err != nil {
+			logger.Error(err)
+			continue
+		}
+		if option.ID > 0 {
+			continue
+		}
+		DB.Debug().Create(&models.GoWechat{
+			BelongWx:    BelongWx,
+			Wxid:        data.Wxid,
+			Account:     data.Account,
+			Sex:         data.Sex,
+			Avatar:      data.Avatar,
+			City:        data.City,
+			Country:     data.Country,
+			LabelidList: data.LabelidList,
+			Nickname:    data.Nickname,
+			Province:    data.Province,
+			Remark:      data.Remark,
+			CreateTs:    time.Now().UnixMilli(),
+			UpdateTs:    time.Now().UnixMilli(),
+			DeleteTs:    time.Now().UnixMilli(),
+		})
 	}
 }

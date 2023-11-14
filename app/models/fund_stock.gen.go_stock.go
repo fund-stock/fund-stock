@@ -272,3 +272,10 @@ func (obj *_GoStockMgr) FetchByPrimaryKey(id int64) (result GoStock, err error) 
 
 	return
 }
+
+// FetchIndexByCode  获取多个内容
+func (obj *_GoStockMgr) FetchIndexByCode(code string) (results []*GoStock, err error) {
+	err = obj.DB.WithContext(obj.ctx).Model(GoStock{}).Where("`code` = ?", code).Find(&results).Error
+
+	return
+}

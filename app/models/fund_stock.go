@@ -1,22 +1,22 @@
 package models
 
 import (
+	"gorm.io/datatypes"
 	"time"
 )
 
 // GoAccount [...]
 type GoAccount struct {
-	ID             uint64         `gorm:"primaryKey;column:id" json:"-"`
-	GoOperationLog GoOperationLog `gorm:"joinForeignKey:id;foreignKey:id;references:ID" json:"goOperationLogList"` // 操作记录表
-	Username       string         `gorm:"column:username" json:"username"`                                         // 用户名
-	Password       string         `gorm:"column:password" json:"password"`                                         // 密码
-	Level          int            `gorm:"column:level" json:"level"`                                               // 账号类型，1为管理员，2为商户
-	RoleID         int            `gorm:"column:role_id" json:"roleId"`                                            // (角色id)
-	Mobile         string         `gorm:"column:mobile" json:"mobile"`                                             // 手机号码
-	Status         int            `gorm:"column:status" json:"status"`                                             // 状态1：为正常 -1：为冻结
-	CreatedAt      time.Time      `gorm:"column:created_at" json:"createdAt"`                                      // 创建时间
-	UpdatedAt      time.Time      `gorm:"column:updated_at" json:"updatedAt"`                                      // 更新时间
-	DeletedAt      time.Time      `gorm:"column:deleted_at" json:"deletedAt"`                                      // 删除时间
+	ID        uint64    `gorm:"primaryKey;column:id" json:"-"`
+	Username  string    `gorm:"column:username" json:"username"`    // 用户名
+	Password  string    `gorm:"column:password" json:"password"`    // 密码
+	Level     int       `gorm:"column:level" json:"level"`          // 账号类型，1为管理员，2为商户
+	RoleID    int       `gorm:"column:role_id" json:"roleId"`       // (角色id)
+	Mobile    string    `gorm:"column:mobile" json:"mobile"`        // 手机号码
+	Status    int       `gorm:"column:status" json:"status"`        // 状态1：为正常 -1：为冻结
+	CreatedAt time.Time `gorm:"column:created_at" json:"createdAt"` // 创建时间
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updatedAt"` // 更新时间
+	DeletedAt time.Time `gorm:"column:deleted_at" json:"deletedAt"` // 删除时间
 }
 
 // TableName get sql table name.获取数据库表名
@@ -384,6 +384,53 @@ var GoOperationLogColumns = struct {
 	DeletedAt: "deleted_at",
 }
 
+// GoRapidlyTbl 股票急速上涨下跌提醒
+type GoRapidlyTbl struct {
+	ID            int            `gorm:"primaryKey;column:id" json:"-"`
+	Code          string         `gorm:"column:code" json:"code"`                    // 股票代码
+	Tag           int            `gorm:"column:tag" json:"tag"`                      // 1:上涨，0:下跌
+	Key           string         `gorm:"column:key" json:"key"`                      // 消息类型
+	Desc          string         `gorm:"column:desc" json:"desc"`                    // 消息描述
+	Old           float64        `gorm:"column:old" json:"old"`                      // 之前价格
+	New           float64        `gorm:"column:new" json:"new"`                      // 当前价格
+	Percent       float64        `gorm:"column:percent" json:"percent"`              // 百分比
+	OffsetPercent float64        `gorm:"column:offset_percent" json:"offsetPercent"` // 相对百分比
+	Day           datatypes.Date `gorm:"column:day" json:"day"`                      // 当日0点时间戳
+	CreatedAt     time.Time      `gorm:"column:created_at" json:"createdAt"`         // 创建时间
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoRapidlyTbl) TableName() string {
+	return "go_rapidly_tbl"
+}
+
+// GoRapidlyTblColumns get sql column name.获取数据库列名
+var GoRapidlyTblColumns = struct {
+	ID            string
+	Code          string
+	Tag           string
+	Key           string
+	Desc          string
+	Old           string
+	New           string
+	Percent       string
+	OffsetPercent string
+	Day           string
+	CreatedAt     string
+}{
+	ID:            "id",
+	Code:          "code",
+	Tag:           "tag",
+	Key:           "key",
+	Desc:          "desc",
+	Old:           "old",
+	New:           "new",
+	Percent:       "percent",
+	OffsetPercent: "offset_percent",
+	Day:           "day",
+	CreatedAt:     "created_at",
+}
+
 // GoRole [...]
 type GoRole struct {
 	ID        uint64    `gorm:"primaryKey;column:id" json:"-"`
@@ -552,4 +599,110 @@ var GoStockDayColumns = struct {
 	DayAt:    "day_at",
 	CreateAt: "create_at",
 	UpdateAt: "update_at",
+}
+
+// GoUser [...]
+type GoUser struct {
+	ID        uint64    `gorm:"primaryKey;column:id" json:"-"`
+	Openid    string    `gorm:"column:openid" json:"openid"`        // openid
+	Nickname  string    `gorm:"column:nickname" json:"nickname"`    // 昵称
+	Avatar    string    `gorm:"column:avatar" json:"avatar"`        // 头像
+	Username  string    `gorm:"column:username" json:"username"`    // 用户名
+	Password  string    `gorm:"column:password" json:"password"`    // 密码
+	Mobile    int64     `gorm:"column:mobile" json:"mobile"`        // 手机号
+	Status    int       `gorm:"column:status" json:"status"`        // 状态1：为正常 -1：为冻结
+	CreatedAt time.Time `gorm:"column:created_at" json:"createdAt"` // 创建时间
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updatedAt"` // 更新时间
+	DeletedAt time.Time `gorm:"column:deleted_at" json:"deletedAt"` // 删除时间
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoUser) TableName() string {
+	return "go_user"
+}
+
+// GoUserColumns get sql column name.获取数据库列名
+var GoUserColumns = struct {
+	ID        string
+	Openid    string
+	Nickname  string
+	Avatar    string
+	Username  string
+	Password  string
+	Mobile    string
+	Status    string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt string
+}{
+	ID:        "id",
+	Openid:    "openid",
+	Nickname:  "nickname",
+	Avatar:    "avatar",
+	Username:  "username",
+	Password:  "password",
+	Mobile:    "mobile",
+	Status:    "status",
+	CreatedAt: "created_at",
+	UpdatedAt: "updated_at",
+	DeletedAt: "deleted_at",
+}
+
+// GoWechat [...]
+type GoWechat struct {
+	ID          int    `gorm:"primaryKey;column:id" json:"-"`
+	BelongWx    string `gorm:"column:belong_wx" json:"belongWx"`       // 归属微信
+	Wxid        string `gorm:"column:wxid" json:"wxid"`                // 微信ID
+	Account     string `gorm:"column:account" json:"account"`          // 微信账号
+	Sex         int    `gorm:"column:sex" json:"sex"`                  // 1男,2女,0未知
+	Avatar      string `gorm:"column:avatar" json:"avatar"`            // 微信头像
+	City        string `gorm:"column:city" json:"city"`                // 城市
+	Country     string `gorm:"column:country" json:"country"`          // 国家
+	LabelidList string `gorm:"column:labelid_list" json:"labelidList"` // 标签ID
+	Nickname    string `gorm:"column:nickname" json:"nickname"`        // 昵称
+	Province    string `gorm:"column:province" json:"province"`        // 省份
+	Remark      string `gorm:"column:remark" json:"remark"`            // 备注
+	CreateTs    int64  `gorm:"column:create_ts" json:"createTs"`
+	UpdateTs    int64  `gorm:"column:update_ts" json:"updateTs"`
+	DeleteTs    int64  `gorm:"column:delete_ts" json:"deleteTs"`
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *GoWechat) TableName() string {
+	return "go_wechat"
+}
+
+// GoWechatColumns get sql column name.获取数据库列名
+var GoWechatColumns = struct {
+	ID          string
+	BelongWx    string
+	Wxid        string
+	Account     string
+	Sex         string
+	Avatar      string
+	City        string
+	Country     string
+	LabelidList string
+	Nickname    string
+	Province    string
+	Remark      string
+	CreateTs    string
+	UpdateTs    string
+	DeleteTs    string
+}{
+	ID:          "id",
+	BelongWx:    "belong_wx",
+	Wxid:        "wxid",
+	Account:     "account",
+	Sex:         "sex",
+	Avatar:      "avatar",
+	City:        "city",
+	Country:     "country",
+	LabelidList: "labelid_list",
+	Nickname:    "nickname",
+	Province:    "province",
+	Remark:      "remark",
+	CreateTs:    "create_ts",
+	UpdateTs:    "update_ts",
+	DeleteTs:    "delete_ts",
 }

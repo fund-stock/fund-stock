@@ -388,23 +388,9 @@ func (obj *_GoRoutesMgr) FetchByPrimaryKey(id uint64) (result GoRoutes, err erro
 	return
 }
 
-// FetchIndexByIDxGoRouteCreatedAt  获取多个内容
-func (obj *_GoRoutesMgr) FetchIndexByIDxGoRouteCreatedAt(createdAt time.Time) (results []*GoRoutes, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoRoutes{}).Where("`created_at` = ?", createdAt).Find(&results).Error
-
-	return
-}
-
 // FetchIndexByIDxGoRoutesCreatedAt  获取多个内容
 func (obj *_GoRoutesMgr) FetchIndexByIDxGoRoutesCreatedAt(createdAt time.Time) (results []*GoRoutes, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(GoRoutes{}).Where("`created_at` = ?", createdAt).Find(&results).Error
-
-	return
-}
-
-// FetchIndexByIDxGoRouteDeletedAt  获取多个内容
-func (obj *_GoRoutesMgr) FetchIndexByIDxGoRouteDeletedAt(deletedAt time.Time) (results []*GoRoutes, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(GoRoutes{}).Where("`deleted_at` = ?", deletedAt).Find(&results).Error
 
 	return
 }
