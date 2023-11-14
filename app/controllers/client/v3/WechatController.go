@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
@@ -11,6 +12,8 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"goapi/app/models"
 	"goapi/app/response"
+	"goapi/pkg/config"
+	"goapi/pkg/echo"
 	"goapi/pkg/logger"
 	"goapi/pkg/mysql"
 	"io/ioutil"
@@ -67,10 +70,10 @@ func (h *WechatController) ServeWechat(c *gin.Context) {
 }
 
 func (h *WechatController) Synchronize(c *gin.Context) {
-	url := "http://106.52.198.173:8000/contact/get_contacts"
+	url := fmt.Sprintf("%s/contact/get_contact", config.GetString("wechat.botUrl"))
 	method := "POST"
-	BelongWx := "xiaomg_zs"
-	payload := strings.NewReader(`{"guid": "48b678e5-a377-3067-b651-26ac580c87df"}`)
+	BelongWx := config.GetString("wechat.BelongWx")
+	payload := strings.NewReader(fmt.Sprintf(`{"guid": "%s"}`, config.GetString("wechat.guid")))
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
 	if err != nil {
@@ -100,8 +103,9 @@ func (h *WechatController) Synchronize(c *gin.Context) {
 		logger.Error(errors.New(wxResp.Msg))
 		return
 	}
+	Wechats := wxResp.Data.([]response.Wechat)
 	DB := models.GoWechatMgr(mysql.DB)
-	for _, data := range wxResp.Data {
+	for _, data := range Wechats {
 		option, err := DB.GetByOption(DB.WithBelongWx(BelongWx), DB.WithWxid(data.Wxid))
 		if err != nil {
 			logger.Error(err)
@@ -118,7 +122,7 @@ func (h *WechatController) Synchronize(c *gin.Context) {
 			Avatar:      data.Avatar,
 			City:        data.City,
 			Country:     data.Country,
-			LabelidList: data.LabelidList,
+			LabelidList: data.LabelIdList,
 			Nickname:    data.Nickname,
 			Province:    data.Province,
 			Remark:      data.Remark,
@@ -127,4 +131,42 @@ func (h *WechatController) Synchronize(c *gin.Context) {
 			DeleteTs:    time.Now().UnixMilli(),
 		})
 	}
+}
+
+// 发送消息
+
+func (h *WechatController) Send(c *gin.Context) {
+	url := fmt.Sprintf("%s/msg/send_text", config.GetString("wechat.botUrl"))
+	method := "POST"
+	jsonData := fmt.Sprintf(`{"guid":"%s","to_wxid":"%s","content":"%s"}`, config.GetString("wechat.guid"), "wxid_y2r6u6gwd5m522", "你好")
+	payload := strings.NewReader(jsonData)
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+	if err != nil {
+		echo.Error(c, "Failed", err.Error())
+		return
+	}
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req)
+	if err != nil {
+		echo.Error(c, "Failed", err.Error())
+		return
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		echo.Error(c, "Failed", err.Error())
+		return
+	}
+	var wxResp response.RespWx
+	err = json.Unmarshal(body, &wxResp)
+	if err != nil {
+		echo.Error(c, "Failed", err.Error())
+		return
+	}
+	if wxResp.Status != 1 {
+		echo.Error(c, "Failed", wxResp.Msg)
+		return
+	}
+	echo.Success(c, nil, "发送成功")
 }

@@ -22,6 +22,7 @@ func AddressLimit() gin.HandlerFunc {
 		logger.Info(c.ClientIP())
 		switch c.FullPath() {
 		case "/app/v3/wechat/userSynchronize.json":
+		case "/app/v3/wechat/Send.json":
 		case "/app/v3/wechat/init.json":
 			break
 		default:
@@ -49,6 +50,7 @@ func Client() gin.HandlerFunc {
 		path := c.FullPath()
 		switch path {
 		case "/app/v3/wechat/userSynchronize.json":
+		case "/app/v3/wechat/Send.json":
 		case "/app/v3/wechat/init.json":
 			// 继续往下面执行
 			c.Next()

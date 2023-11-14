@@ -59,6 +59,8 @@ LOG_MYSQL_WARN: true
 NOTIFY_EMAIL: mail@54zm.com
 
 
+
+
 # bark 通知配置
 bark:
   url: https://api.day.app/
@@ -66,3 +68,8 @@ bark:
     mac: YvemvqzPAgvc2ASqwcP2KH
     iphone: nPuFoXfYsMpVrUaqU8to99
   logo: https://avatars.githubusercontent.com/u/135967790?s=400&u=0efb3cc947e9f0c2165c11f65f374524cb48915d&v=4
+
+wechat:
+  botUrl: http://106.52.198.173:8000
+  guid: 48b678e5-a377-3067-b651-26ac580c87df
+  BelongWx: xiaomg_zs
