@@ -1,0 +1,42 @@
+# CodeQL 工作流程配置文件
+
+name: CodeQL
+
+# 触发条件：在 main 分支上推送代码时触发工作流
+on:
+  push:
+    branches:
+      - main
+
+# 代码分析任务
+jobs:
+  analyze:
+    # 运行在 Ubuntu 环境上
+    runs-on: ubuntu-latest
+
+    # 语言矩阵，目前只包含 Golang
+    strategy:
+      matrix:
+        language: [go]
+
+    # 任务步骤
+    steps:
+    # 步骤 1：检出代码库
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # 步骤 2：初始化 CodeQL
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+
+    # 步骤 3：构建 Golang 代码
+    - name: Build
+      run: |
+        go mod download
+        go build -v ./...
+
+    # 步骤 4：使用 CodeQL 分析代码
+    - name: Analyze
+      uses: github/codeql-action/analyze@v1
+      with:
+        language: ${{ matrix.language }}
