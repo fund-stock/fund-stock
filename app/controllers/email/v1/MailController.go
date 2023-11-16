@@ -38,11 +38,13 @@ func (h *MailController) QueryMargin(c *gin.Context) {
 	if validate.ParamsError(c, params) {
 		return
 	}
-	mysql.DB.Model(models.GoEmailRouting{}).Where(map[string]interface{}{
+	// 构建查询条件
+	conditions := map[string]interface{}{
 		"valid":  1,
 		"nation": params.Nation,
 		"email":  params.SenderName,
-	}).Find(&result)
+	}
+	mysql.DB.Model(models.GoEmailRouting{}).Where("valid = :valid AND nation = :nation AND email = :email", conditions).Find(&result)
 	if result.Id == 0 {
 		echo.Error(c, "Failed", fmt.Sprintf("，国家：%v 不存在发信人 %v ", params.Nation, params.SenderName))
 		return
