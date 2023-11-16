@@ -1,41 +1,79 @@
-# CodeQL 工作流程配置文件
-name: CodeQL
+# 对于大多数项目，此工作流配置文件通常无需更改；您只需要将其提交到您的代码库中。
+#
+# 您可以选择修改此文件以覆盖分析的语言集，
+# 或提供自定义查询或构建逻辑。
+#
+# ******** 注意 ********
+# 我们已尝试检测您的代码库中的语言。请检查下面定义的 `language` 矩阵，以确认您是否有正确的一组
+# 支持的 CodeQL 语言。
+#
+name: "CodeQL"
 
-# 触发条件：在 main 分支上推送代码时触发工作流
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    # 下面的分支必须是上面分支的子集
+    branches: [ "main" ]
+  schedule:
+    - cron: '20 23 * * 5'
 
-# 代码分析任务
 jobs:
   analyze:
-    # 运行在 Ubuntu 环境上
-    runs-on: ubuntu-latest
+    name: Analyze
+    # Runner 大小影响 CodeQL 分析时间。了解更多，请参阅：
+    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
+    #   - https://gh.io/supported-runners-and-hardware-resources
+    #   - https://gh.io/using-larger-runners
+    # 考虑使用更大的 Runner 可能会提高分析时间。
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
-    # 语言矩阵，目前只包含 Golang
     strategy:
+      fail-fast: false
       matrix:
-        language: [go]
+        language: [ 'go' ]
+        # CodeQL 支持 [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ]
+        # 仅使用 'java-kotlin' 来分析使用 Java、Kotlin 或两者编写的代码
+        # 仅使用 'javascript-typescript' 来分析使用 JavaScript、TypeScript 或两者编写的代码
+        # 了解有关 CodeQL 语言支持的详细信息：https://aka.ms/codeql-docs/language-support
 
-    # 任务步骤
     steps:
-    # 步骤 1：检出代码库
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    # 步骤 2：初始化 CodeQL
+    # 初始化 CodeQL 工具以进行扫描。
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-
-    # 步骤 3：构建 Golang 代码
-    - name: Build
-      run: |
-        go mod download
-        go build -v ./...
-
-    # 步骤 4：使用 CodeQL 分析代码
-    - name: Analyze
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/init@v2
       with:
-        language: ${{ matrix.language }}
+        languages: ${{ matrix.language }}
+        # 如果您希望指定自定义查询，可以在这里或配置文件中执行此操作。
+        # 默认情况下，此处列出的查询将覆盖配置文件中指定的任何查询。
+        # 在此列表前面加上 "+" 可以使用这些查询和配置文件中的查询。
+
+        # 有关 CodeQL 查询包的详细信息，请参阅：https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+        # queries: security-extended,security-and-quality
+
+    # Autobuild 尝试构建任何编译语言（C/C ++、C＃、Go、Java 或 Swift）。
+    # 如果此步骤失败，则应将其删除并手动运行构建（参见下文）
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    # ℹ️ 使用操作系统 shell 运行的命令行程序。
+    # 📚 请参阅 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+    #   如果上面的 Autobuild 失败，请删除它并取消下面三行的注释。
+    #   修改它们（或添加更多）以构建您的代码，如果您的项目，请参考下面的示例以获取指导。
+
+    # - run: |
+    #     echo "运行，使用脚本构建应用程序"
+    #     ./location_of_script_within_repo/buildscript.sh
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
