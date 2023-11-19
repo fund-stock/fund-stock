@@ -4,7 +4,7 @@ import (
 	"fmt"
 	conf "goapi/pkg/config"
 	"goapi/pkg/logger"
-	"goapi/pkg/notice/telegram"
+	"goapi/pkg/notice/bark"
 	"net/http"
 	_ "net/http/pprof"
 	"runtime"
@@ -27,10 +27,7 @@ func Debug(addr string) {
 					logger.Info("pprof=" + addr)
 					logger.Info(cutContent)
 					logger.Info(errInfo)
-					telegram.Notice(map[string]interface{}{
-						"title":   title,
-						"content": errInfo,
-					})
+					bark.Notice(title, errInfo)
 				}
 			}()
 			// 启动一个 http server，注意 pprof 相关的 handler 已经自动注册过了
