@@ -3,12 +3,13 @@ package template
 import (
 	"fmt"
 	cmap "github.com/orcaman/concurrent-map"
+	"goapi/serve/binary-stock/client"
 )
 
-func TplUp(name string, diffPrice, zfPercent, currentPrice, PrePrice interface{}) map[string]interface{} {
+func TplUp(Stock *client.SharesInfoDetails, diffPrice, zfPercent, currentPrice, PrePrice interface{}) map[string]interface{} {
 	msg := cmap.New().Items()
 	// 上涨通知
-	msg["title"] = fmt.Sprintf("%v-上涨", name)
+	msg["title"] = fmt.Sprintf("%v-%v-上涨", client.ClassifyBoard(Stock.Code), Stock.Name)
 	msg["body"] = fmt.Sprintf(""+
 		"⬆️涨：%v ¥\n"+
 		"⬆️涨幅：%v %%\n"+
@@ -19,10 +20,10 @@ func TplUp(name string, diffPrice, zfPercent, currentPrice, PrePrice interface{}
 	return msg
 }
 
-func TplDown(name string, diffPrice, zfPercent, currentPrice, PrePrice interface{}) map[string]interface{} {
+func TplDown(Stock *client.SharesInfoDetails, diffPrice, zfPercent, currentPrice, PrePrice interface{}) map[string]interface{} {
 	msg := cmap.New().Items()
 	// 下跌通知
-	msg["title"] = fmt.Sprintf("%v-下跌", name)
+	msg["title"] = fmt.Sprintf("%v-%v-下跌", client.ClassifyBoard(Stock.Code), Stock.Name)
 	msg["body"] = fmt.Sprintf(""+
 		"⬇️跌：%v ¥\n"+
 		"⬇️跌幅：%v %%\n"+

@@ -51,10 +51,10 @@ func MonitorPercentageChange(Stock *client.SharesInfoDetails) {
 		return
 	}
 	if diffPrice > 0 {
-		msg := template.TplUp(Stock.Name, diffPrice, zfPercent, currentPrice, PrePrice)
+		msg := template.TplUp(Stock, diffPrice, zfPercent, currentPrice, PrePrice)
 		notice.Notice(msg["title"].(string), msg["body"].(string))
 	} else {
-		msg := template.TplDown(Stock.Name, diffPrice, zfPercent, currentPrice, PrePrice)
+		msg := template.TplDown(Stock, diffPrice, zfPercent, currentPrice, PrePrice)
 		notice.Notice(msg["title"].(string), msg["body"].(string))
 	}
 }

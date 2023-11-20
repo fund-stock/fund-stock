@@ -145,3 +145,22 @@ func StockList() {
 	fmt.Println("Success")
 
 }
+
+// 创业板和中小板、主板就股票代码上有什么区别
+// 创业板股票代码区间为：300000-399999，一般按发行顺序依次编码，如：300001、300002等。
+// 沪市代码600、601、603开头，
+// 深市股票代码，000、001、002、300开头。
+// 创业板是深圳交易所的一个子版块，是300开头的股票。目前共计356只创业板个股
+//
+// 作者：生而为人2019
+// 链接：https://xueqiu.com/7851772761/134168423
+// 来源：雪球
+
+func ClassifyBoard(stockCode string) string {
+	stockCode = stockCode[2:]
+	code := helpers.StringToInt64(stockCode)
+	if code >= 300000 && code <= 399999 {
+		return "创业板"
+	}
+	return "主板"
+}
